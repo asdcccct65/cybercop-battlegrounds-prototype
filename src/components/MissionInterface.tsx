@@ -1,12 +1,11 @@
-
 import React, { useState, useEffect } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Progress } from "@/components/ui/progress"
-import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
-import { Clock, Target, CheckCircle, XCircle, Play, Pause, Terminal, Shield, Eye } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import { MissionHeader } from "./mission/MissionHeader"
+import { ChallengeProgress } from "./mission/ChallengeProgress"
+import { InteractiveChallenge } from "./mission/InteractiveChallenge"
+import { MissionProgress } from "./mission/MissionProgress"
+import { MissionControls } from "./mission/MissionControls"
 
 interface MissionInterfaceProps {
   mission: {
@@ -132,7 +131,6 @@ export function MissionInterface({ mission, isOpen, onClose }: MissionInterfaceP
     setIsScanning(true)
     setScanResults([])
     
-    // Simulate network scanning
     const scanData = [
       "Scanning 192.168.1.0/24...",
       "Port 22/tcp - SSH - OPEN",
@@ -184,19 +182,7 @@ export function MissionInterface({ mission, isOpen, onClose }: MissionInterfaceP
     }
   }
 
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60)
-    const secs = seconds % 60
-    return `${mins}:${secs.toString().padStart(2, '0')}`
-  }
-
   if (!mission) return null
-
-  const difficultyColors = {
-    Easy: "bg-cyber-green/20 text-cyber-green border-cyber-green/30",
-    Medium: "bg-cyber-orange/20 text-cyber-orange border-cyber-orange/30",
-    Hard: "bg-cyber-red/20 text-cyber-red border-cyber-red/30"
-  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -211,153 +197,36 @@ export function MissionInterface({ mission, isOpen, onClose }: MissionInterfaceP
         </DialogHeader>
         
         <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <Badge className={difficultyColors[mission.difficulty]}>
-              {mission.difficulty}
-            </Badge>
-            <Badge variant="outline" className="text-cyber-purple">
-              {mission.teamType}
-            </Badge>
-          </div>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Mission Brief</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">{mission.description}</p>
-            </CardContent>
-          </Card>
-
-          {/* Challenge Progress */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center space-x-2">
-                <Target className="h-5 w-5 text-cyber-blue" />
-                <span>Challenges</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {challenges.map((challenge) => (
-                <div key={challenge.id} className="flex items-center space-x-3">
-                  {challenge.completed ? (
-                    <CheckCircle className="h-5 w-5 text-cyber-green" />
-                  ) : (
-                    <div className="h-5 w-5 border-2 border-muted rounded-full" />
-                  )}
-                  <span className={challenge.completed ? "line-through text-muted-foreground" : ""}>
-                    {challenge.title} ({challenge.points} pts)
-                  </span>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-
-          {/* Interactive Challenge Area */}
+          <MissionHeader mission={mission} />
+          <ChallengeProgress challenges={challenges} />
+          
           {isStarted && currentChallenge && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">{currentChallenge.title}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-muted-foreground">{currentChallenge.description}</p>
-                
-                {currentChallenge.type === "scan" && (
-                  <div className="space-y-4">
-                    <Button 
-                      onClick={handleScan} 
-                      disabled={isScanning || currentChallenge.completed}
-                      className="bg-cyber-blue hover:bg-cyber-blue/80"
-                    >
-                      <Terminal className="h-4 w-4 mr-2" />
-                      {isScanning ? "Scanning..." : "Start Network Scan"}
-                    </Button>
-                    
-                    {scanResults.length > 0 && (
-                      <div className="bg-black/80 text-cyber-green p-4 rounded font-mono text-sm">
-                        {scanResults.map((line, index) => (
-                          <div key={index}>{line}</div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )}
-                
-                {currentChallenge.type === "analyze" && (
-                  <Button 
-                    onClick={handleAnalyze}
-                    disabled={currentChallenge.completed || !challenges.find(c => c.id === 1)?.completed}
-                    className="bg-cyber-orange hover:bg-cyber-orange/80"
-                  >
-                    <Eye className="h-4 w-4 mr-2" />
-                    Analyze Scan Results
-                  </Button>
-                )}
-                
-                {currentChallenge.type === "report" && (
-                  <Button 
-                    onClick={handleReport}
-                    disabled={currentChallenge.completed || !challenges.find(c => c.id === 2)?.completed}
-                    className="bg-cyber-green hover:bg-cyber-green/80"
-                  >
-                    <Shield className="h-4 w-4 mr-2" />
-                    Generate Security Report
-                  </Button>
-                )}
-              </CardContent>
-            </Card>
+            <InteractiveChallenge
+              currentChallenge={currentChallenge}
+              scanResults={scanResults}
+              isScanning={isScanning}
+              challenges={challenges}
+              onScan={handleScan}
+              onAnalyze={handleAnalyze}
+              onReport={handleReport}
+            />
           )}
 
-          {/* Progress Display */}
-          {(isStarted || progress > 0) && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg flex items-center justify-between">
-                  <span>Mission Progress</span>
-                  <div className="flex items-center space-x-2 text-sm">
-                    <Clock className="h-4 w-4" />
-                    <span>{formatTime(timeLeft)}</span>
-                  </div>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Progress value={progress} className="w-full" />
-                <p className="text-sm text-muted-foreground mt-2">
-                  {Math.round(progress)}% Complete
-                </p>
-              </CardContent>
-            </Card>
-          )}
+          <MissionProgress 
+            progress={progress}
+            timeLeft={timeLeft}
+            isStarted={isStarted}
+          />
 
-          {/* Control Buttons */}
-          <div className="flex space-x-4">
-            {!isStarted && progress === 0 && (
-              <Button onClick={handleStart} className="bg-cyber-blue hover:bg-cyber-blue/80">
-                <Play className="h-4 w-4 mr-2" />
-                Start Mission
-              </Button>
-            )}
-            
-            {isStarted && (
-              <Button onClick={handlePause} variant="outline">
-                <Pause className="h-4 w-4 mr-2" />
-                Pause
-              </Button>
-            )}
-            
-            {(progress > 0 && !isCompleted) && (
-              <Button onClick={handleReset} variant="destructive">
-                Reset Mission
-              </Button>
-            )}
-            
-            {isCompleted && (
-              <div className="flex items-center space-x-2 text-cyber-green">
-                <CheckCircle className="h-5 w-5" />
-                <span className="font-semibold">Mission Completed! +{challenges.reduce((sum, c) => sum + c.points, 0)} points</span>
-              </div>
-            )}
-          </div>
+          <MissionControls
+            isStarted={isStarted}
+            progress={progress}
+            isCompleted={isCompleted}
+            challenges={challenges}
+            onStart={handleStart}
+            onPause={handlePause}
+            onReset={handleReset}
+          />
         </div>
       </DialogContent>
     </Dialog>
