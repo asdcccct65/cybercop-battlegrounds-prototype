@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { useToast } from "@/hooks/use-toast"
@@ -102,11 +103,46 @@ export function MissionInterface({ mission, isOpen, onClose }: MissionInterfaceP
 
   const handleStart = () => {
     if (!mission) return
+    
+    // Initialize challenges based on mission type
+    const missionChallenges: Challenge[] = [
+      {
+        id: 1,
+        title: "Network Scan",
+        description: "Perform a network scan to identify open ports and services",
+        type: "scan",
+        completed: false,
+        points: 50
+      },
+      {
+        id: 2,
+        title: "Vulnerability Analysis",
+        description: "Analyze the scan results to identify potential vulnerabilities",
+        type: "analyze",
+        completed: false,
+        points: 75
+      },
+      {
+        id: 3,
+        title: "Security Report",
+        description: "Generate a comprehensive security report with findings",
+        type: "report",
+        completed: false,
+        points: 100
+      }
+    ]
+    
+    setChallenges(missionChallenges)
+    setCurrentChallenge(missionChallenges[0]) // Set the first challenge immediately
+    
     const totalMinutes = parseInt(mission.duration.split(' ')[0]) * (mission.duration.includes('hour') ? 60 : 1)
     setTimeLeft(totalMinutes * 60)
     setIsStarted(true)
     setProgress(0)
     setIsCompleted(false)
+    setScanResults([])
+    setIsScanning(false)
+    
     toast({
       title: "Mission Started",
       description: "Complete the challenges to earn points!",
@@ -200,7 +236,7 @@ export function MissionInterface({ mission, isOpen, onClose }: MissionInterfaceP
           <MissionHeader mission={mission} />
           <ChallengeProgress challenges={challenges} />
           
-          {isStarted && currentChallenge && (
+          {currentChallenge && (
             <InteractiveChallenge
               currentChallenge={currentChallenge}
               scanResults={scanResults}
