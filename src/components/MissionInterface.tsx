@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { useToast } from "@/hooks/use-toast"
@@ -26,7 +25,7 @@ interface Challenge {
   id: number
   title: string
   description: string
-  type: "scan" | "analyze" | "report"
+  type: "scan" | "analyze" | "report" | "phishing" | "incident" | "penetration"
   completed: boolean
   points: number
 }
@@ -52,9 +51,84 @@ export function MissionInterface({ mission, isOpen, onClose }: MissionInterfaceP
   }, [isStarted, timeLeft, isCompleted])
 
   useEffect(() => {
-    if (mission && isStarted) {
-      // Initialize challenges based on mission type
-      const missionChallenges: Challenge[] = [
+    const completedChallenges = challenges.filter(c => c.completed).length
+    const newProgress = (completedChallenges / challenges.length) * 100
+    setProgress(newProgress)
+    
+    if (completedChallenges === challenges.length && challenges.length > 0) {
+      setIsCompleted(true)
+      setIsStarted(false)
+      const totalPoints = challenges.reduce((sum, c) => sum + c.points, 0)
+      toast({
+        title: "Mission Completed!",
+        description: `You earned ${totalPoints} points!`,
+      })
+    }
+  }, [challenges, toast])
+
+  const getMissionChallenges = (missionTitle: string): Challenge[] => {
+    console.log("Creating challenges for mission:", missionTitle)
+    
+    if (missionTitle.includes("Phishing")) {
+      return [
+        {
+          id: 1,
+          title: "Email Analysis",
+          description: "Identify phishing emails from a set of suspicious messages",
+          type: "phishing",
+          completed: false,
+          points: 75
+        },
+        {
+          id: 2,
+          title: "Defense Implementation",
+          description: "Document defensive measures to prevent future phishing attacks",
+          type: "report",
+          completed: false,
+          points: 100
+        }
+      ]
+    } else if (missionTitle.includes("Incident Response")) {
+      return [
+        {
+          id: 1,
+          title: "Incident Assessment",
+          description: "Analyze the security incident and document initial findings",
+          type: "incident",
+          completed: false,
+          points: 100
+        },
+        {
+          id: 2,
+          title: "Containment Plan",
+          description: "Create a containment strategy for the security breach",
+          type: "report",
+          completed: false,
+          points: 150
+        }
+      ]
+    } else if (missionTitle.includes("Penetration")) {
+      return [
+        {
+          id: 1,
+          title: "Network Reconnaissance",
+          description: "Gather information about the target network infrastructure",
+          type: "penetration",
+          completed: false,
+          points: 150
+        },
+        {
+          id: 2,
+          title: "Vulnerability Assessment",
+          description: "Identify and document security vulnerabilities",
+          type: "analyze",
+          completed: false,
+          points: 200
+        }
+      ]
+    } else {
+      // Default challenges for other missions
+      return [
         {
           id: 1,
           title: "Network Scan",
@@ -80,60 +154,17 @@ export function MissionInterface({ mission, isOpen, onClose }: MissionInterfaceP
           points: 100
         }
       ]
-      setChallenges(missionChallenges)
-      setCurrentChallenge(missionChallenges[0])
     }
-  }, [mission, isStarted])
-
-  useEffect(() => {
-    const completedChallenges = challenges.filter(c => c.completed).length
-    const newProgress = (completedChallenges / challenges.length) * 100
-    setProgress(newProgress)
-    
-    if (completedChallenges === challenges.length && challenges.length > 0) {
-      setIsCompleted(true)
-      setIsStarted(false)
-      const totalPoints = challenges.reduce((sum, c) => sum + c.points, 0)
-      toast({
-        title: "Mission Completed!",
-        description: `You earned ${totalPoints} points!`,
-      })
-    }
-  }, [challenges, toast])
+  }
 
   const handleStart = () => {
     if (!mission) return
     
-    // Initialize challenges based on mission type
-    const missionChallenges: Challenge[] = [
-      {
-        id: 1,
-        title: "Network Scan",
-        description: "Perform a network scan to identify open ports and services",
-        type: "scan",
-        completed: false,
-        points: 50
-      },
-      {
-        id: 2,
-        title: "Vulnerability Analysis",
-        description: "Analyze the scan results to identify potential vulnerabilities",
-        type: "analyze",
-        completed: false,
-        points: 75
-      },
-      {
-        id: 3,
-        title: "Security Report",
-        description: "Generate a comprehensive security report with findings",
-        type: "report",
-        completed: false,
-        points: 100
-      }
-    ]
+    const missionChallenges = getMissionChallenges(mission.title)
+    console.log("Setting challenges:", missionChallenges)
     
     setChallenges(missionChallenges)
-    setCurrentChallenge(missionChallenges[0]) // Set the first challenge immediately
+    setCurrentChallenge(missionChallenges[0])
     
     const totalMinutes = parseInt(mission.duration.split(' ')[0]) * (mission.duration.includes('hour') ? 60 : 1)
     setTimeLeft(totalMinutes * 60)
@@ -188,23 +219,43 @@ export function MissionInterface({ mission, isOpen, onClose }: MissionInterfaceP
   }
 
   const handleAnalyze = () => {
-    if (challenges.find(c => c.id === 1)?.completed) {
-      completeChallenge(2)
-      toast({
-        title: "Analysis Complete",
-        description: "Vulnerabilities identified: Outdated SSH, MySQL exposure",
-      })
-    }
+    completeChallenge(currentChallenge?.id || 0)
+    toast({
+      title: "Analysis Complete",
+      description: "Vulnerabilities identified successfully",
+    })
   }
 
   const handleReport = () => {
-    if (challenges.find(c => c.id === 2)?.completed) {
-      completeChallenge(3)
-      toast({
-        title: "Report Generated",
-        description: "Security assessment report has been compiled",
-      })
-    }
+    completeChallenge(currentChallenge?.id || 0)
+    toast({
+      title: "Report Generated",
+      description: "Security assessment report has been compiled",
+    })
+  }
+
+  const handlePhishingAnalysis = () => {
+    completeChallenge(1)
+    toast({
+      title: "Phishing Analysis Complete",
+      description: "Successfully identified phishing attempts",
+    })
+  }
+
+  const handleIncidentResponse = () => {
+    completeChallenge(1)
+    toast({
+      title: "Incident Response Documented",
+      description: "Response plan has been recorded",
+    })
+  }
+
+  const handlePenetrationTest = () => {
+    completeChallenge(1)
+    toast({
+      title: "Penetration Test Started",
+      description: "Initial reconnaissance completed",
+    })
   }
 
   const completeChallenge = (challengeId: number) => {
@@ -245,6 +296,9 @@ export function MissionInterface({ mission, isOpen, onClose }: MissionInterfaceP
               onScan={handleScan}
               onAnalyze={handleAnalyze}
               onReport={handleReport}
+              onPhishingAnalysis={handlePhishingAnalysis}
+              onIncidentResponse={handleIncidentResponse}
+              onPenetrationTest={handlePenetrationTest}
             />
           )}
 
