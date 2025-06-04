@@ -1,6 +1,7 @@
 
-import React from "react"
+import React, { useState } from "react"
 import { MissionCard } from "@/components/MissionCard"
+import { MissionInterface } from "@/components/MissionInterface"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Activity, Clock, Trophy } from "lucide-react"
@@ -71,12 +72,24 @@ const missions = [
 
 const MissionDashboard = () => {
   const { toast } = useToast()
+  const [selectedMission, setSelectedMission] = useState<typeof missions[0] | null>(null)
+  const [isMissionOpen, setIsMissionOpen] = useState(false)
 
-  const handleStartMission = (missionTitle: string) => {
-    toast({
-      title: "Mission Starting",
-      description: `Preparing ${missionTitle}. Please wait...`,
-    })
+  const handleStartMission = (missionId: number) => {
+    const mission = missions.find(m => m.id === missionId)
+    if (mission) {
+      setSelectedMission(mission)
+      setIsMissionOpen(true)
+      toast({
+        title: "Mission Loading",
+        description: `Opening ${mission.title}...`,
+      })
+    }
+  }
+
+  const handleCloseMission = () => {
+    setIsMissionOpen(false)
+    setSelectedMission(null)
   }
 
   return (
@@ -138,10 +151,17 @@ const MissionDashboard = () => {
             teamType={mission.teamType}
             points={mission.points}
             participants={mission.participants}
-            onStart={() => handleStartMission(mission.title)}
+            onStart={() => handleStartMission(mission.id)}
           />
         ))}
       </div>
+
+      {/* Mission Interface Modal */}
+      <MissionInterface
+        mission={selectedMission}
+        isOpen={isMissionOpen}
+        onClose={handleCloseMission}
+      />
     </div>
   )
 }
