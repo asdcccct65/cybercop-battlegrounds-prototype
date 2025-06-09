@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { useToast } from "@/hooks/use-toast"
@@ -70,6 +71,7 @@ export function MissionInterface({ mission, isOpen, onClose }: MissionInterfaceP
     console.log("Creating challenges for mission:", missionTitle)
     
     if (missionTitle.includes("SQL Injection")) {
+      console.log("Generating SQL Injection challenges")
       return [
         {
           id: 1,
@@ -174,6 +176,7 @@ export function MissionInterface({ mission, isOpen, onClose }: MissionInterfaceP
       ]
     } else {
       // Default challenges for other missions
+      console.log("Generating default challenges")
       return [
         {
           id: 1,
@@ -204,14 +207,27 @@ export function MissionInterface({ mission, isOpen, onClose }: MissionInterfaceP
   }
 
   const handleStart = () => {
-    if (!mission) return
+    if (!mission) {
+      console.error("No mission available")
+      return
+    }
     
     console.log("Starting mission:", mission.title)
     const missionChallenges = getMissionChallenges(mission.title)
     console.log("Generated challenges:", missionChallenges)
     
+    if (missionChallenges.length === 0) {
+      console.error("No challenges generated!")
+      return
+    }
+    
+    // Set challenges first
     setChallenges(missionChallenges)
-    setCurrentChallenge(missionChallenges[0])
+    
+    // Then set the current challenge
+    const firstChallenge = missionChallenges[0]
+    setCurrentChallenge(firstChallenge)
+    console.log("Set current challenge:", firstChallenge)
     
     const totalMinutes = parseInt(mission.duration.split(' ')[0]) * (mission.duration.includes('hour') ? 60 : 1)
     setTimeLeft(totalMinutes * 60)
@@ -221,7 +237,11 @@ export function MissionInterface({ mission, isOpen, onClose }: MissionInterfaceP
     setScanResults([])
     setIsScanning(false)
     
-    console.log("Mission started with current challenge:", missionChallenges[0])
+    console.log("Mission started successfully with:", {
+      challenges: missionChallenges.length,
+      currentChallenge: firstChallenge.title,
+      isStarted: true
+    })
     
     toast({
       title: "Mission Started",
@@ -322,8 +342,9 @@ export function MissionInterface({ mission, isOpen, onClose }: MissionInterfaceP
 
   console.log("Rendering MissionInterface with:", {
     isStarted,
-    currentChallenge,
-    challengesLength: challenges.length
+    currentChallenge: currentChallenge?.title || null,
+    challengesLength: challenges.length,
+    missionTitle: mission.title
   })
 
   return (
@@ -344,18 +365,21 @@ export function MissionInterface({ mission, isOpen, onClose }: MissionInterfaceP
           {challenges.length > 0 && <ChallengeProgress challenges={challenges} />}
           
           {isStarted && currentChallenge && (
-            <InteractiveChallenge
-              currentChallenge={currentChallenge}
-              scanResults={scanResults}
-              isScanning={isScanning}
-              challenges={challenges}
-              onScan={handleScan}
-              onAnalyze={handleAnalyze}
-              onReport={handleReport}
-              onPhishingAnalysis={handlePhishingAnalysis}
-              onIncidentResponse={handleIncidentResponse}
-              onPenetrationTest={handlePenetrationTest}
-            />
+            <div className="border border-cyber-blue/30 rounded-lg p-4 bg-cyber-blue/5">
+              <h3 className="text-lg font-semibold mb-4 text-cyber-blue">Current Challenge</h3>
+              <InteractiveChallenge
+                currentChallenge={currentChallenge}
+                scanResults={scanResults}
+                isScanning={isScanning}
+                challenges={challenges}
+                onScan={handleScan}
+                onAnalyze={handleAnalyze}
+                onReport={handleReport}
+                onPhishingAnalysis={handlePhishingAnalysis}
+                onIncidentResponse={handleIncidentResponse}
+                onPenetrationTest={handlePenetrationTest}
+              />
+            </div>
           )}
 
           <MissionProgress 
