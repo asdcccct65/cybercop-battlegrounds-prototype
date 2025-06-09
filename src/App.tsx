@@ -1,38 +1,12 @@
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { ThemeProvider } from "./components/ThemeProvider";
-import { Layout } from "./components/Layout";
-import Index from "./pages/Index";
-import ModeSelection from "./pages/ModeSelection";
-import MissionDashboard from "./pages/MissionDashboard";
-import ProgressTracker from "./pages/ProgressTracker";
-import NotFound from "./pages/NotFound";
-
-const queryClient = new QueryClient();
-
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider defaultTheme="dark" storageKey="cybercop-ui-theme">
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Layout><Index /></Layout>} />
-            <Route path="/mode-selection" element={<Layout><ModeSelection /></Layout>} />
-            <Route path="/missions" element={<Layout><MissionDashboard /></Layout>} />
-            <Route path="/progress" element={<Layout><ProgressTracker /></Layout>} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </ThemeProvider>
-  </QueryClientProvider>
+  <div style={{ padding: "2rem", color: "#fff", fontFamily: "sans-serif" }}>
+    <h1>🚨 Welcome to CyberCop</h1>
+    <p>This is a simple test to make sure the interface is working inside Lovable.dev.</p>
+    <button style={{ padding: "0.5rem 1rem", background: "#333", color: "#fff", border: "none", borderRadius: "4px" }}>
+      Start Mission
+    </button>
+  </div>
 );
 
 export default App;
