@@ -69,7 +69,34 @@ export function MissionInterface({ mission, isOpen, onClose }: MissionInterfaceP
   const getMissionChallenges = (missionTitle: string): Challenge[] => {
     console.log("Creating challenges for mission:", missionTitle)
     
-    if (missionTitle.includes("Phishing")) {
+    if (missionTitle.includes("SQL Injection")) {
+      return [
+        {
+          id: 1,
+          title: "SQL Injection Scan",
+          description: "Scan the web application for SQL injection vulnerabilities",
+          type: "scan",
+          completed: false,
+          points: 100
+        },
+        {
+          id: 2,
+          title: "Exploit Analysis",
+          description: "Analyze and exploit the discovered SQL injection vulnerability",
+          type: "analyze",
+          completed: false,
+          points: 150
+        },
+        {
+          id: 3,
+          title: "Impact Assessment",
+          description: "Document the potential impact and create a security report",
+          type: "report",
+          completed: false,
+          points: 100
+        }
+      ]
+    } else if (missionTitle.includes("Phishing")) {
       return [
         {
           id: 1,
@@ -126,6 +153,25 @@ export function MissionInterface({ mission, isOpen, onClose }: MissionInterfaceP
           points: 200
         }
       ]
+    } else if (missionTitle.includes("Malware")) {
+      return [
+        {
+          id: 1,
+          title: "Malware Scan",
+          description: "Scan and identify malware samples in the lab environment",
+          type: "scan",
+          completed: false,
+          points: 125
+        },
+        {
+          id: 2,
+          title: "Behavior Analysis",
+          description: "Analyze malware behavior and create signatures",
+          type: "analyze",
+          completed: false,
+          points: 175
+        }
+      ]
     } else {
       // Default challenges for other missions
       return [
@@ -160,8 +206,9 @@ export function MissionInterface({ mission, isOpen, onClose }: MissionInterfaceP
   const handleStart = () => {
     if (!mission) return
     
+    console.log("Starting mission:", mission.title)
     const missionChallenges = getMissionChallenges(mission.title)
-    console.log("Setting challenges:", missionChallenges)
+    console.log("Generated challenges:", missionChallenges)
     
     setChallenges(missionChallenges)
     setCurrentChallenge(missionChallenges[0])
@@ -173,6 +220,8 @@ export function MissionInterface({ mission, isOpen, onClose }: MissionInterfaceP
     setIsCompleted(false)
     setScanResults([])
     setIsScanning(false)
+    
+    console.log("Mission started with current challenge:", missionChallenges[0])
     
     toast({
       title: "Mission Started",
@@ -271,6 +320,12 @@ export function MissionInterface({ mission, isOpen, onClose }: MissionInterfaceP
 
   if (!mission) return null
 
+  console.log("Rendering MissionInterface with:", {
+    isStarted,
+    currentChallenge,
+    challengesLength: challenges.length
+  })
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
@@ -285,9 +340,10 @@ export function MissionInterface({ mission, isOpen, onClose }: MissionInterfaceP
         
         <div className="space-y-6">
           <MissionHeader mission={mission} />
-          <ChallengeProgress challenges={challenges} />
           
-          {currentChallenge && (
+          {challenges.length > 0 && <ChallengeProgress challenges={challenges} />}
+          
+          {isStarted && currentChallenge && (
             <InteractiveChallenge
               currentChallenge={currentChallenge}
               scanResults={scanResults}
