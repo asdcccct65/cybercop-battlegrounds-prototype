@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
@@ -91,8 +90,13 @@ export function MissionInterface({ mission, isOpen, onClose }: MissionInterfaceP
 
   const handleStepComplete = (stepId: number, points: number) => {
     if (labMission && mission) {
-      // Save progress
-      saveProgress(mission.id, stepId, points)
+      // Save progress with shard reward callback
+      saveProgress(mission.id, stepId, points, (shardReward) => {
+        toast({
+          title: "Step Completed!",
+          description: `You earned ${points} points and ${shardReward} shards!`,
+        })
+      })
       
       // Update local state
       setLabMission(prev => {
