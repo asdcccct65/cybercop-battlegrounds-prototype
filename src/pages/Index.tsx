@@ -9,36 +9,58 @@ import { CharacterCreator } from "@/components/character/CharacterCreator"
 import { CharacterAvatar } from "@/components/character/CharacterAvatar"
 import { EquipmentStore } from "@/components/store/EquipmentStore"
 import { useUserProfile } from "@/hooks/useUserProfile"
-import { ArrowRight, Shield, Target, Trophy, ShoppingBag, Gem } from "lucide-react"
+import { ArrowRight, Shield, Target, Trophy, ShoppingBag, Gem, Edit3, Settings } from "lucide-react"
 
 const Index = () => {
-  const { profile, completeOnboarding, addShards } = useUserProfile()
+  const { profile, completeOnboarding, updateCharacter } = useUserProfile()
   const [showStore, setShowStore] = useState(false)
+  const [showCharacterEdit, setShowCharacterEdit] = useState(false)
+
+  const handleCharacterSave = (character: any) => {
+    updateCharacter(character)
+    setShowCharacterEdit(false)
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
       <div className="container mx-auto px-4 py-8">
-        {/* User HUD */}
+        {/* Enhanced User HUD */}
         {!profile.isNewUser && (
-          <div className="fixed top-4 right-4 z-50 flex items-center space-x-4">
-            <Card className="bg-card/80 backdrop-blur-sm border-cyber-blue/30">
-              <CardContent className="p-3 flex items-center space-x-3">
+          <div className="fixed top-4 right-4 z-50 flex items-center space-x-3">
+            <Card className="bg-card/90 backdrop-blur-sm border-cyber-blue/30 shadow-lg">
+              <CardContent className="p-4 flex items-center space-x-4">
                 <CharacterAvatar character={profile.character} size="sm" />
                 <div className="text-sm">
                   <p className="font-semibold">{profile.username}</p>
-                  <div className="flex items-center space-x-2">
-                    <Gem className="h-4 w-4 text-cyber-blue" />
-                    <span>{profile.shards} Shards</span>
+                  <div className="flex items-center space-x-3">
+                    <div className="flex items-center space-x-1">
+                      <Gem className="h-4 w-4 text-cyber-blue" />
+                      <span className="font-medium">{profile.shards}</span>
+                    </div>
+                    <div className="flex items-center space-x-1">
+                      <Trophy className="h-4 w-4 text-cyber-orange" />
+                      <span>{profile.completedMissions.length}</span>
+                    </div>
                   </div>
                 </div>
-                <Button 
-                  size="sm" 
-                  variant="outline"
-                  onClick={() => setShowStore(true)}
-                  className="border-cyber-blue text-cyber-blue hover:bg-cyber-blue/10"
-                >
-                  <ShoppingBag className="h-4 w-4" />
-                </Button>
+                <div className="flex flex-col space-y-2">
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={() => setShowCharacterEdit(true)}
+                    className="border-cyber-green text-cyber-green hover:bg-cyber-green/10"
+                  >
+                    <Edit3 className="h-4 w-4" />
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={() => setShowStore(true)}
+                    className="border-cyber-blue text-cyber-blue hover:bg-cyber-blue/10"
+                  >
+                    <ShoppingBag className="h-4 w-4" />
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -55,13 +77,18 @@ const Index = () => {
               Master Cybersecurity Through Practice
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Join the ultimate cybersecurity training platform. Choose your side, complete missions, 
-              and become an elite digital defender or ethical hacker.
+              Join the ultimate cybersecurity training platform. Create your unique avatar, complete missions, 
+              earn shards, and unlock legendary equipment as you master digital defense.
             </p>
             {!profile.isNewUser && (
-              <Badge variant="outline" className="bg-cyber-blue/10 border-cyber-blue text-cyber-blue">
-                Welcome back, {profile.username}!
-              </Badge>
+              <div className="flex items-center justify-center space-x-4">
+                <Badge variant="outline" className="bg-cyber-blue/10 border-cyber-blue text-cyber-blue">
+                  Welcome back, Agent {profile.username}!
+                </Badge>
+                <Badge variant="outline" className="bg-cyber-green/10 border-cyber-green text-cyber-green">
+                  Level {Math.floor(profile.shards / 100) + 1}
+                </Badge>
+              </div>
             )}
           </div>
 
@@ -73,45 +100,96 @@ const Index = () => {
               </Link>
             </Button>
             {!profile.isNewUser && (
-              <Button 
-                onClick={() => setShowStore(true)}
-                variant="outline" 
-                size="lg" 
-                className="border-cyber-green text-cyber-green hover:bg-cyber-green/10"
-              >
-                <ShoppingBag className="mr-2 h-4 w-4" />
-                Equipment Store
-              </Button>
+              <>
+                <Button 
+                  onClick={() => setShowStore(true)}
+                  variant="outline" 
+                  size="lg" 
+                  className="border-cyber-green text-cyber-green hover:bg-cyber-green/10"
+                >
+                  <ShoppingBag className="mr-2 h-4 w-4" />
+                  Equipment Store
+                </Button>
+                <Button 
+                  onClick={() => setShowCharacterEdit(true)}
+                  variant="outline" 
+                  size="lg" 
+                  className="border-cyber-purple text-cyber-purple hover:bg-cyber-purple/10"
+                >
+                  <Edit3 className="mr-2 h-4 w-4" />
+                  Customize Avatar
+                </Button>
+              </>
             )}
           </div>
         </div>
 
-        {/* Character Showcase */}
+        {/* Enhanced Character Showcase */}
         {!profile.isNewUser && (
           <div className="mb-16">
-            <Card className="bg-gradient-to-r from-cyber-blue/10 via-cyber-green/10 to-cyber-purple/10 border-cyber-blue/30">
-              <CardContent className="p-8 text-center">
-                <div className="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-8">
-                  <CharacterAvatar character={profile.character} size="lg" />
-                  <div className="space-y-2">
+            <Card className="bg-gradient-to-r from-cyber-blue/10 via-cyber-green/10 to-cyber-purple/10 border-cyber-blue/30 hover:border-cyber-blue/50 transition-all duration-300">
+              <CardContent className="p-8">
+                <div className="grid md:grid-cols-3 gap-8 items-center">
+                  <div className="text-center md:text-left space-y-4">
                     <h3 className="text-2xl font-bold bg-gradient-to-r from-cyber-blue to-cyber-green bg-clip-text text-transparent">
                       Agent {profile.username}
                     </h3>
-                    <div className="flex items-center justify-center space-x-4 text-sm">
-                      <div className="flex items-center space-x-1">
-                        <Gem className="h-4 w-4 text-cyber-blue" />
-                        <span>{profile.shards} Shards</span>
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div className="flex items-center space-x-2">
+                        <Gem className="h-5 w-5 text-cyber-blue" />
+                        <div>
+                          <p className="font-semibold">{profile.shards}</p>
+                          <p className="text-muted-foreground">Shards</p>
+                        </div>
                       </div>
-                      <div className="flex items-center space-x-1">
-                        <Trophy className="h-4 w-4 text-cyber-orange" />
-                        <span>{profile.completedMissions.length} Missions</span>
+                      <div className="flex items-center space-x-2">
+                        <Trophy className="h-5 w-5 text-cyber-orange" />
+                        <div>
+                          <p className="font-semibold">{profile.completedMissions.length}</p>
+                          <p className="text-muted-foreground">Missions</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <ShoppingBag className="h-5 w-5 text-cyber-green" />
+                        <div>
+                          <p className="font-semibold">{profile.unlockedItems.length}</p>
+                          <p className="text-muted-foreground">Items</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Settings className="h-5 w-5 text-cyber-purple" />
+                        <div>
+                          <p className="font-semibold">Level {Math.floor(profile.shards / 100) + 1}</p>
+                          <p className="text-muted-foreground">Agent Rank</p>
+                        </div>
                       </div>
                     </div>
+                  </div>
+                  
+                  <div className="flex justify-center">
+                    <div className="relative">
+                      <CharacterAvatar character={profile.character} size="lg" />
+                      <div className="absolute -inset-2 bg-gradient-to-r from-cyber-blue/20 to-cyber-green/20 rounded-full animate-pulse"></div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
                     <Button 
                       onClick={() => setShowStore(true)}
-                      className="bg-cyber-blue hover:bg-cyber-blue/80"
+                      className="w-full bg-cyber-blue hover:bg-cyber-blue/80"
+                      size="lg"
                     >
+                      <ShoppingBag className="mr-2 h-5 w-5" />
                       Upgrade Equipment
+                    </Button>
+                    <Button 
+                      onClick={() => setShowCharacterEdit(true)}
+                      variant="outline"
+                      className="w-full border-cyber-green text-cyber-green hover:bg-cyber-green/10"
+                      size="lg"
+                    >
+                      <Edit3 className="mr-2 h-5 w-5" />
+                      Customize Avatar
                     </Button>
                   </div>
                 </div>
@@ -139,9 +217,9 @@ const Index = () => {
               <div className="mx-auto w-16 h-16 bg-cyber-green/10 rounded-full flex items-center justify-center mb-4">
                 <Target className="h-8 w-8 text-cyber-green" />
               </div>
-              <CardTitle className="text-cyber-green">Real-World Missions</CardTitle>
+              <CardTitle className="text-cyber-green">Earn Shards & Level Up</CardTitle>
               <CardDescription>
-                Practice with realistic scenarios and earn Shards to unlock new equipment
+                Complete missions to earn Shards and unlock amazing equipment for your avatar
               </CardDescription>
             </CardHeader>
           </Card>
@@ -153,7 +231,7 @@ const Index = () => {
               </div>
               <CardTitle className="text-cyber-orange">Customize Your Agent</CardTitle>
               <CardDescription>
-                Personalize your character and unlock legendary equipment as you progress
+                Create your unique avatar and collect legendary gear as you progress through missions
               </CardDescription>
             </CardHeader>
           </Card>
@@ -166,8 +244,8 @@ const Index = () => {
               Ready to Begin Your Cyber Journey?
             </h2>
             <p className="text-muted-foreground mb-6 max-w-xl mx-auto">
-              Join thousands of cybersecurity professionals who have enhanced their skills through CyberCop's 
-              immersive training experience.
+              Create your unique avatar, master cybersecurity skills, and unlock an arsenal of legendary equipment. 
+              Join thousands of agents who have elevated their skills through CyberCop's immersive training.
             </p>
             <Button asChild size="lg" className="bg-cyber-blue hover:bg-cyber-blue/80 text-white">
               <Link to="/mode-selection">
@@ -183,6 +261,16 @@ const Index = () => {
       <CharacterCreator 
         isOpen={profile.isNewUser} 
         onComplete={completeOnboarding}
+      />
+
+      {/* Character Editor for existing users */}
+      <CharacterCreator 
+        isOpen={showCharacterEdit}
+        editMode={true}
+        currentCharacter={profile.character}
+        currentUsername={profile.username}
+        onSave={handleCharacterSave}
+        onCancel={() => setShowCharacterEdit(false)}
       />
 
       {/* Equipment Store */}
