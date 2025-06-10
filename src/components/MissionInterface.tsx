@@ -51,9 +51,6 @@ export function MissionInterface({ mission, isOpen, onClose }: MissionInterfaceP
         // Load saved progress
         const progress = getMissionProgress(mission.id)
         if (progress) {
-          const completedSteps = lab.steps.filter(step => 
-            progress.completedChallenges.includes(step.id)
-          )
           lab.steps.forEach(step => {
             step.completed = progress.completedChallenges.includes(step.id)
           })
@@ -204,6 +201,8 @@ export function MissionInterface({ mission, isOpen, onClose }: MissionInterfaceP
             challenges={labMission.steps.map(s => ({
               id: s.id,
               title: s.title,
+              description: s.description,
+              type: s.type,
               completed: s.completed,
               points: s.points
             }))}
@@ -272,12 +271,7 @@ export function MissionInterface({ mission, isOpen, onClose }: MissionInterfaceP
       <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl">
-            <MissionHeader
-              title={labMission.title}
-              difficulty={labMission.difficulty}
-              category={labMission.category}
-              duration={labMission.duration}
-            />
+            <MissionHeader mission={labMission} />
           </DialogTitle>
         </DialogHeader>
 
@@ -351,6 +345,8 @@ export function MissionInterface({ mission, isOpen, onClose }: MissionInterfaceP
               challenges={labMission.steps.map(step => ({
                 id: step.id,
                 title: step.title,
+                description: step.description,
+                type: step.type,
                 completed: step.completed,
                 points: step.points
               }))}
