@@ -1,17 +1,18 @@
-
 import React, { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import { Terminal, Eye, Shield, Mail, FileText, Network } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { Terminal, Eye, Shield, Mail, FileText, Network, CheckCircle } from "lucide-react"
 
 interface Challenge {
   id: number
   title: string
   description: string
-  type: "scan" | "analyze" | "report" | "phishing" | "incident" | "penetration"
+  type: "scan" | "analyze" | "report" | "phishing" | "incident" | "penetration" | "multiple-choice" | "input" | "code"
   completed: boolean
   points: number
+  data?: any
 }
 
 interface InteractiveChallengeProps {
@@ -25,6 +26,7 @@ interface InteractiveChallengeProps {
   onPhishingAnalysis: () => void
   onIncidentResponse: () => void
   onPenetrationTest: () => void
+  onCompleteChallenge: (challengeId: number) => void
 }
 
 export function InteractiveChallenge({
@@ -37,42 +39,229 @@ export function InteractiveChallenge({
   onReport,
   onPhishingAnalysis,
   onIncidentResponse,
-  onPenetrationTest
+  onPenetrationTest,
+  onCompleteChallenge
 }: InteractiveChallengeProps) {
   const [userInput, setUserInput] = useState("")
-  const [phishingEmails] = useState([
-    {
-      id: 1,
-      subject: "Urgent: Verify Your Account",
-      sender: "security@payp4l.com",
-      content: "Your account will be suspended. Click here to verify: http://payp4l-security.suspicious.com",
-      isPhishing: true
-    },
-    {
-      id: 2,
-      subject: "Meeting Tomorrow",
-      sender: "john@company.com",
-      content: "Hi, don't forget about our meeting tomorrow at 2 PM in conference room A.",
-      isPhishing: false
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
+  const [showResult, setShowResult] = useState(false)
+
+  const getIcon = () => {
+    switch (currentChallenge.type) {
+      case "scan": return <Terminal className="h-5 w-5" />
+      case "analyze": return <Eye className="h-5 w-5" />
+      case "report": return <Shield className="h-5 w-5" />
+      case "phishing": return <Mail className="h-5 w-5" />
+      case "incident": return <FileText className="h-5 w-5" />
+      case "penetration": return <Network className="h-5 w-5" />
+      case "multiple-choice": return <CheckCircle className="h-5 w-5" />
+      case "input": return <Terminal className="h-5 w-5" />
+      case "code": return <Terminal className="h-5 w-5" />
+      default: return <Terminal className="h-5 w-5" />
     }
-  ])
+  }
+
+  const handleMultipleChoiceSubmit = () => {
+    if (selectedAnswer === null) return
+    
+    const isCorrect = selectedAnswer === currentChallenge.data?.correct
+    setShowResult(true)
+    
+    if (isCorrect) {
+      setTimeout(() => {
+        onCompleteChallenge(currentChallenge.id)
+        setShowResult(false)
+        setSelectedAnswer(null)
+      }, 1500)
+    }
+  }
+
+  const handleInputSubmit = () => {
+    if (!userInput.trim()) return
+    
+    let isCorrect = false
+    
+    if (currentChallenge.data?.correctAnswers) {
+      // Check against multiple correct answers
+      isCorrect = currentChallenge.data.correctAnswers.some((answer: string) => 
+        userInput.toLowerCase().includes(answer.toLowerCase())
+      )
+    } else if (currentChallenge.data?.minLength) {
+      // Check minimum length requirement
+      isCorrect = userInput.length >= currentChallenge.data.minLength
+    } else {
+      // For code challenges, check for keywords
+      if (currentChallenge.data?.keywords) {
+        isCorrect = currentChallenge.data.keywords.some((keyword: string) =>
+          userInput.toLowerCase().includes(keyword.toLowerCase())
+        )
+      } else {
+        isCorrect = userInput.length > 10 // Basic validation
+      }
+    }
+    
+    setShowResult(true)
+    
+    if (isCorrect) {
+      setTimeout(() => {
+        onCompleteChallenge(currentChallenge.id)
+        setShowResult(false)
+        setUserInput("")
+      }, 1500)
+    }
+  }
+
+  const resetAnswer = () => {
+    setShowResult(false)
+    setSelectedAnswer(null)
+    setUserInput("")
+  }
+
+  if (currentChallenge.completed) {
+    return (
+      <Card className="border-cyber-green/30 bg-cyber-green/5">
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center space-x-2 text-cyber-green">
+            <CheckCircle className="h-5 w-5" />
+            <span>{currentChallenge.title} - Completed!</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-cyber-green">✅ Challenge completed successfully! (+{currentChallenge.points} points)</p>
+        </CardContent>
+      </Card>
+    )
+  }
 
   return (
     <Card>
       <CardHeader>
         <CardTitle className="text-lg flex items-center space-x-2">
-          {currentChallenge.type === "scan" && <Terminal className="h-5 w-5" />}
-          {currentChallenge.type === "analyze" && <Eye className="h-5 w-5" />}
-          {currentChallenge.type === "report" && <Shield className="h-5 w-5" />}
-          {currentChallenge.type === "phishing" && <Mail className="h-5 w-5" />}
-          {currentChallenge.type === "incident" && <FileText className="h-5 w-5" />}
-          {currentChallenge.type === "penetration" && <Network className="h-5 w-5" />}
+          {getIcon()}
           <span>{currentChallenge.title}</span>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <p className="text-muted-foreground">{currentChallenge.description}</p>
         
+        {/* Multiple Choice Challenge */}
+        {currentChallenge.type === "multiple-choice" && currentChallenge.data && (
+          <div className="space-y-4">
+            <h4 className="font-semibold">{currentChallenge.data.question}</h4>
+            <div className="space-y-2">
+              {currentChallenge.data.options.map((option: string, index: number) => (
+                <button
+                  key={index}
+                  onClick={() => setSelectedAnswer(index)}
+                  className={`w-full text-left p-3 rounded border transition-colors ${
+                    selectedAnswer === index
+                      ? "border-cyber-blue bg-cyber-blue/10"
+                      : "border-gray-300 hover:border-cyber-blue/50"
+                  }`}
+                  disabled={showResult}
+                >
+                  {String.fromCharCode(65 + index)}. {option}
+                </button>
+              ))}
+            </div>
+            
+            {showResult && (
+              <div className={`p-4 rounded ${
+                selectedAnswer === currentChallenge.data.correct
+                  ? "bg-cyber-green/20 text-cyber-green border border-cyber-green/30"
+                  : "bg-cyber-red/20 text-cyber-red border border-cyber-red/30"
+              }`}>
+                {selectedAnswer === currentChallenge.data.correct
+                  ? "✅ Correct! Great job!"
+                  : `❌ Incorrect. The correct answer was: ${String.fromCharCode(65 + currentChallenge.data.correct)}. ${currentChallenge.data.options[currentChallenge.data.correct]}`
+                }
+              </div>
+            )}
+            
+            <div className="flex space-x-2">
+              <Button 
+                onClick={handleMultipleChoiceSubmit}
+                disabled={selectedAnswer === null || showResult}
+                className="bg-cyber-blue hover:bg-cyber-blue/80"
+              >
+                Submit Answer
+              </Button>
+              {showResult && selectedAnswer !== currentChallenge.data.correct && (
+                <Button onClick={resetAnswer} variant="outline">
+                  Try Again
+                </Button>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Input Challenge */}
+        {(currentChallenge.type === "input" || currentChallenge.type === "code") && (
+          <div className="space-y-4">
+            {currentChallenge.type === "code" ? (
+              <Textarea
+                placeholder={currentChallenge.data?.placeholder || "Enter your answer..."}
+                value={userInput}
+                onChange={(e) => setUserInput(e.target.value)}
+                disabled={showResult}
+                className="font-mono text-sm min-h-[120px]"
+              />
+            ) : (
+              <Input
+                placeholder={currentChallenge.data?.placeholder || "Enter your answer..."}
+                value={userInput}
+                onChange={(e) => setUserInput(e.target.value)}
+                disabled={showResult}
+              />
+            )}
+            
+            {showResult && (
+              <div className={`p-4 rounded ${
+                userInput && (
+                  currentChallenge.data?.correctAnswers?.some((answer: string) => 
+                    userInput.toLowerCase().includes(answer.toLowerCase())
+                  ) ||
+                  (currentChallenge.data?.minLength && userInput.length >= currentChallenge.data.minLength) ||
+                  (currentChallenge.data?.keywords?.some((keyword: string) =>
+                    userInput.toLowerCase().includes(keyword.toLowerCase())
+                  ))
+                )
+                  ? "bg-cyber-green/20 text-cyber-green border border-cyber-green/30"
+                  : "bg-cyber-red/20 text-cyber-red border border-cyber-red/30"
+              }`}>
+                {userInput && (
+                  currentChallenge.data?.correctAnswers?.some((answer: string) => 
+                    userInput.toLowerCase().includes(answer.toLowerCase())
+                  ) ||
+                  (currentChallenge.data?.minLength && userInput.length >= currentChallenge.data.minLength) ||
+                  (currentChallenge.data?.keywords?.some((keyword: string) =>
+                    userInput.toLowerCase().includes(keyword.toLowerCase())
+                  ))
+                )
+                  ? "✅ Correct! Well done!"
+                  : "❌ Not quite right. Try again with a different approach."
+                }
+              </div>
+            )}
+            
+            <div className="flex space-x-2">
+              <Button 
+                onClick={handleInputSubmit}
+                disabled={!userInput.trim() || showResult}
+                className="bg-cyber-blue hover:bg-cyber-blue/80"
+              >
+                Submit
+              </Button>
+              {showResult && (
+                <Button onClick={resetAnswer} variant="outline">
+                  Try Again
+                </Button>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Legacy challenge types for backward compatibility */}
         {currentChallenge.type === "scan" && (
           <div className="space-y-4">
             <Button 
@@ -101,7 +290,7 @@ export function InteractiveChallenge({
             className="bg-cyber-orange hover:bg-cyber-orange/80"
           >
             <Eye className="h-4 w-4 mr-2" />
-            Analyze Scan Results
+            Analyze Results
           </Button>
         )}
         
@@ -116,10 +305,25 @@ export function InteractiveChallenge({
           </Button>
         )}
 
-        {currentChallenge.type === "phishing" && (
+        {currentChallenge.type === "phishing" && currentChallenge.id === 1 && (
           <div className="space-y-4">
             <h4 className="font-semibold">Analyze these emails and identify which ones are phishing attempts:</h4>
-            {phishingEmails.map((email) => (
+            {[
+              {
+                id: 1,
+                subject: "Urgent: Verify Your Account",
+                sender: "security@payp4l.com",
+                content: "Your account will be suspended. Click here to verify: http://payp4l-security.suspicious.com",
+                isPhishing: true
+              },
+              {
+                id: 2,
+                subject: "Meeting Tomorrow",
+                sender: "john@company.com",
+                content: "Hi, don't forget about our meeting tomorrow at 2 PM in conference room A.",
+                isPhishing: false
+              }
+            ].map((email) => (
               <div key={email.id} className="border p-4 rounded space-y-2">
                 <div><strong>From:</strong> {email.sender}</div>
                 <div><strong>Subject:</strong> {email.subject}</div>
