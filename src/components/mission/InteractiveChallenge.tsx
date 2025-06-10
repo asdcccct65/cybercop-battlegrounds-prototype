@@ -1,3 +1,4 @@
+
 import React, { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -9,7 +10,7 @@ interface Challenge {
   id: number
   title: string
   description: string
-  type: "scan" | "analyze" | "report" | "phishing" | "incident" | "penetration" | "multiple-choice" | "input" | "code"
+  type: "scan" | "analyze" | "report" | "phishing" | "incident" | "penetration" | "multiple-choice" | "input" | "code" | "terminal" | "web-login" | "code-injection"
   completed: boolean
   points: number
   data?: any
