@@ -12,7 +12,7 @@ import { Palette, Edit3 } from "lucide-react"
 
 interface CharacterCreatorProps {
   isOpen: boolean
-  onComplete: (username: string, character: CharacterCustomization) => void
+  onComplete?: (username: string, character: CharacterCustomization) => void
   editMode?: boolean
   currentCharacter?: CharacterCustomization
   currentUsername?: string
@@ -81,7 +81,7 @@ export function CharacterCreator({
   const handleComplete = () => {
     if (editMode && onSave) {
       onSave(character)
-    } else if (username.trim()) {
+    } else if (username.trim() && onComplete) {
       onComplete(username, character)
     }
   }
