@@ -1,4 +1,3 @@
-
 import React, { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -23,6 +22,8 @@ import {
   Shield,
   Gem
 } from "lucide-react"
+import { EnhancedAvatar } from "@/components/character/EnhancedAvatar"
+import { ImprovedCharacterCreator } from "@/components/character/ImprovedCharacterCreator"
 
 const Settings = () => {
   const { profile, updateCharacter } = useUserProfile()
@@ -97,7 +98,7 @@ const Settings = () => {
           </p>
         </div>
 
-        {/* Profile Overview */}
+        {/* Enhanced Profile Overview */}
         <Card className="border-cyber-blue/30 bg-gradient-to-r from-cyber-blue/5 to-cyber-green/5">
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
@@ -130,7 +131,7 @@ const Settings = () => {
               </div>
 
               <div className="flex justify-center">
-                <AnimatedAvatar 
+                <EnhancedAvatar 
                   character={profile.character} 
                   size="lg"
                   animation="idle"
@@ -281,8 +282,8 @@ const Settings = () => {
         </Card>
       </div>
 
-      {/* Character Editor Modal */}
-      <CharacterCreator 
+      {/* Enhanced Character Editor Modal */}
+      <ImprovedCharacterCreator 
         isOpen={showCharacterEditor}
         editMode={true}
         currentCharacter={profile.character}

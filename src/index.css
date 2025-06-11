@@ -184,12 +184,14 @@
   animation: slideUp 1s ease-out forwards;
 }
 
-/* Enhanced Avatar Animations */
+/* Enhanced Avatar Animations for Full Body Movement */
+
+/* Base avatar animations */
 @keyframes avatar-idle {
   0%, 100% { transform: translateY(0px) rotate(0deg); }
-  25% { transform: translateY(-2px) rotate(0.5deg); }
+  25% { transform: translateY(-2px) rotate(0.3deg); }
   50% { transform: translateY(-1px) rotate(0deg); }
-  75% { transform: translateY(-3px) rotate(-0.5deg); }
+  75% { transform: translateY(-3px) rotate(-0.3deg); }
 }
 
 @keyframes avatar-wave {
@@ -205,129 +207,105 @@
   66% { transform: translateY(-4px) scale(1.03) rotate(1deg); }
 }
 
-@keyframes avatar-breathe {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.03); }
+@keyframes avatar-thinking {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-1px) rotate(0.5deg); }
+  50% { transform: translateY(0px) rotate(0deg); }
+  75% { transform: translateY(-2px) rotate(-0.5deg); }
 }
 
-@keyframes avatar-sit {
-  0% { transform: translateY(0px); }
-  100% { transform: translateY(8px); }
+@keyframes avatar-victory {
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-5px) scale(1.08); }
 }
 
-@keyframes avatar-dance {
-  0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
-  25% { transform: translateY(-4px) rotate(-2deg) scale(1.02); }
-  50% { transform: translateY(-2px) rotate(2deg) scale(1.01); }
-  75% { transform: translateY(-6px) rotate(-1deg) scale(1.03); }
+@keyframes avatar-stretch {
+  0%, 100% { transform: translateY(0px) scale(1, 1); }
+  50% { transform: translateY(-3px) scale(1.02, 1.05); }
 }
 
-/* Body part animations */
+/* Body part specific animations */
 @keyframes arm-wave {
-  0%, 100% { transform: rotate(-10deg) translateY(0px); }
+  0%, 100% { transform: rotate(-5deg) translateY(0px); }
   25% { transform: rotate(-45deg) translateY(-2px); }
-  50% { transform: rotate(-20deg) translateY(-1px); }
+  50% { transform: rotate(-15deg) translateY(-1px); }
   75% { transform: rotate(-60deg) translateY(-3px); }
 }
 
-@keyframes arm-still {
-  0%, 100% { transform: rotate(10deg); }
-  50% { transform: rotate(15deg); }
+@keyframes arm-heroic {
+  0%, 100% { transform: rotate(15deg) translateY(0px); }
+  50% { transform: rotate(-30deg) translateY(-2px); }
 }
 
-@keyframes arm-idle {
-  0%, 100% { transform: rotate(0deg); }
-  50% { transform: rotate(5deg); }
+@keyframes arm-stretch {
+  0%, 100% { transform: rotate(0deg) translateY(0px); }
+  50% { transform: rotate(-90deg) translateY(-4px); }
 }
 
-@keyframes leg-sway {
-  0%, 100% { transform: translateX(-50%) rotate(0deg); }
-  50% { transform: translateX(-50%) rotate(2deg); }
+@keyframes arm-victory {
+  0%, 100% { transform: rotate(-45deg) translateY(-2px); }
+  50% { transform: rotate(-60deg) translateY(-4px); }
 }
 
-@keyframes leg-sit {
-  0% { transform: translateX(-50%) rotate(0deg); }
-  100% { transform: translateX(-50%) rotate(60deg); }
+/* Head animations */
+.avatar-head {
+  animation: head-bob 4s ease-in-out infinite;
 }
 
+@keyframes head-bob {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-1px) rotate(0.5deg); }
+  75% { transform: translateY(-0.5px) rotate(-0.3deg); }
+}
+
+/* Torso breathing */
+.avatar-torso {
+  animation: torso-breathe 3s ease-in-out infinite;
+}
+
+@keyframes torso-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+/* Enhanced breathing glow */
 @keyframes breathe-glow {
   0%, 100% { opacity: 0.3; }
   50% { opacity: 0.6; }
 }
 
-/* Avatar body part styles */
-.avatar-head {
-  animation: head-bob 4s ease-in-out infinite;
-}
-
-.avatar-torso {
-  animation: torso-breathe 3s ease-in-out infinite;
-}
-
+/* Smooth transition classes for joints */
 .avatar-arm-left,
-.avatar-arm-right {
-  transform-origin: top center;
-}
-
+.avatar-arm-right,
 .avatar-leg-left,
 .avatar-leg-right {
-  transform-origin: top center;
-}
-
-@keyframes head-bob {
-  0%, 100% { transform: translateX(-50%) translateY(0px) rotate(0deg); }
-  25% { transform: translateX(-50%) translateY(-1px) rotate(0.5deg); }
-  75% { transform: translateX(-50%) translateY(-0.5px) rotate(-0.3deg); }
-}
-
-@keyframes torso-breathe {
-  0%, 100% { transform: translateX(-50%) scale(1); }
-  50% { transform: translateX(-50%) scale(1.02); }
-}
-
-/* Natural joint movement and fluid transitions */
-@keyframes shoulder-roll {
-  0%, 100% { transform: translateX(-50%) rotateZ(0deg) rotateY(0deg); }
-  25% { transform: translateX(-50%) rotateZ(2deg) rotateY(5deg); }
-  75% { transform: translateX(-50%) rotateZ(-2deg) rotateY(-5deg); }
-}
-
-@keyframes elbow-bend {
-  0%, 100% { transform: rotateZ(0deg); }
-  50% { transform: rotateZ(15deg); }
-}
-
-@keyframes wrist-flex {
-  0%, 100% { transform: rotateZ(0deg); }
-  50% { transform: rotateZ(10deg); }
-}
-
-@keyframes hip-sway {
-  0%, 100% { transform: translateX(-50%) rotateZ(0deg); }
-  50% { transform: translateX(-50%) rotateZ(1deg); }
-}
-
-@keyframes knee-bend {
-  0%, 100% { transform: rotateZ(0deg); }
-  50% { transform: rotateZ(5deg); }
-}
-
-@keyframes ankle-flex {
-  0%, 100% { transform: rotateZ(0deg); }
-  50% { transform: rotateZ(3deg); }
-}
-
-/* Smooth transition classes */
-.avatar-joint {
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.avatar-limb {
   transform-origin: top center;
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.avatar-extremity {
+.avatar-hand-left,
+.avatar-hand-right {
+  transform-origin: center;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.avatar-foot-left,
+.avatar-foot-right {
   transform-origin: center;
   transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced hover effects for avatar */
+.avatar-container:hover {
+  transform: scale(1.02);
+}
+
+/* Equipment glow effects */
+.equipment-glow {
+  filter: drop-shadow(0 0 8px rgba(0, 255, 255, 0.6));
+}
+
+/* Utility class for smooth imports */
+.cn {
+  @apply transition-all duration-300 ease-in-out;
 }

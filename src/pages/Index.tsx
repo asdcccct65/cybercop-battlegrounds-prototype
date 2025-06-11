@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { CyberLogo } from "@/components/CyberLogo"
-import { CharacterCreator } from "@/components/character/CharacterCreator"
-import { AnimatedAvatar } from "@/components/character/AnimatedAvatar"
+import { ImprovedCharacterCreator } from "@/components/character/ImprovedCharacterCreator"
+import { EnhancedAvatar } from "@/components/character/EnhancedAvatar"
 import { EquipmentStore } from "@/components/store/EquipmentStore"
 import { useUserProfile } from "@/hooks/useUserProfile"
 import { ArrowRight, Shield, Target, Trophy, ShoppingBag, Gem, Edit3, Settings, Sparkles } from "lucide-react"
@@ -26,12 +26,12 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
       <div className="container mx-auto px-4 py-8">
-        {/* Enhanced User HUD with Animated Avatar */}
+        {/* Enhanced User HUD with Full Avatar */}
         {!profile.isNewUser && (
           <div className="fixed top-4 right-4 z-50 flex items-center space-x-3">
             <Card className="bg-card/90 backdrop-blur-sm border-cyber-blue/30 shadow-lg">
               <CardContent className="p-4 flex items-center space-x-4">
-                <AnimatedAvatar 
+                <EnhancedAvatar 
                   character={profile.character} 
                   size="sm" 
                   animation="idle"
@@ -178,14 +178,14 @@ const Index = () => {
                   
                   <div className="flex justify-center">
                     <div className="relative">
-                      <AnimatedAvatar 
+                      <EnhancedAvatar 
                         character={profile.character} 
                         size="xl" 
                         animation={avatarAnimation}
                         showAnimationControls={true}
                         onAnimationChange={setAvatarAnimation}
                       />
-                      <div className="absolute -inset-4 bg-gradient-to-r from-cyber-blue/20 to-cyber-green/20 rounded-xl animate-pulse opacity-50"></div>
+                      <div className="absolute -inset-6 bg-gradient-to-r from-cyber-blue/20 to-cyber-green/20 rounded-2xl animate-pulse opacity-50 -z-10"></div>
                     </div>
                   </div>
 
@@ -273,14 +273,14 @@ const Index = () => {
         </Card>
       </div>
 
-      {/* Character Creator for new users */}
-      <CharacterCreator 
+      {/* Enhanced Character Creator for new users */}
+      <ImprovedCharacterCreator 
         isOpen={profile.isNewUser} 
         onComplete={completeOnboarding}
       />
 
-      {/* Character Editor for existing users */}
-      <CharacterCreator 
+      {/* Enhanced Character Editor for existing users */}
+      <ImprovedCharacterCreator 
         isOpen={showCharacterEdit}
         editMode={true}
         currentCharacter={profile.character}
