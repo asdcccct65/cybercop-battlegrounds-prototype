@@ -1,4 +1,3 @@
-
 export interface LabStep {
   id: number
   type: "terminal" | "web-login" | "code-injection" | "multiple-choice" | "input"
@@ -222,3 +221,9 @@ function ping(host) {
     ]
   }
 ]
+
+// Import and merge enhanced missions
+import { enhancedMissions } from "./enhancedMissions"
+
+// Export combined missions
+export const allMissions = [...labMissions, ...enhancedMissions]

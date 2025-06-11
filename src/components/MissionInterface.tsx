@@ -11,7 +11,8 @@ import { TerminalSimulation } from "./simulation/TerminalSimulation"
 import { WebLoginSimulation } from "./simulation/WebLoginSimulation"
 import { CodeInjectionSimulation } from "./simulation/CodeInjectionSimulation"
 import { InteractiveChallenge } from "./mission/InteractiveChallenge"
-import { labMissions, LabMission, LabStep } from "../data/labMissions"
+import { AdvancedAvatar } from "./character/AdvancedAvatar"
+import { allMissions, LabMission, LabStep } from "../data/labMissions"
 import { useMissionProgress } from "../hooks/useMissionProgress"
 import { useToast } from "@/hooks/use-toast"
 
@@ -42,7 +43,7 @@ export function MissionInterface({ mission, isOpen, onClose }: MissionInterfaceP
   // Load lab mission data
   useEffect(() => {
     if (mission) {
-      const lab = labMissions.find(m => m.id === mission.id)
+      const lab = allMissions.find(m => m.id === mission.id)
       if (lab) {
         setLabMission(lab)
         setLoadingError(null)

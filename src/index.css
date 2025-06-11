@@ -3,74 +3,6 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 47.4% 11.2%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 47.4% 11.2%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --border: 216 34% 17%;
-    --input: 216 34% 17%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --ring: 217.2 32.6% 17.5%;
-
-    --radius: 0.5rem;
-  }
-}
-
-@layer base {
   * {
     @apply border-border;
   }
@@ -82,230 +14,163 @@
   }
 }
 
-/* Custom Colors */
-:root {
-  --cyber-blue: #00FFFF;
-  --cyber-green: #00FF7F;
-  --cyber-purple: #A020F0;
-  --cyber-orange: #FF8C00;
+@layer components {
+  .cyber-glow {
+    @apply transition-colors duration-200 text-cyber-blue hover:text-white hover:shadow-md hover:shadow-cyber-blue/50;
+  }
 }
 
-/* Cyberpunk Text Glow Effect */
-.cyber-glow {
-  text-shadow:
-    0 0 5px var(--cyber-blue),
-    0 0 10px var(--cyber-blue),
-    0 0 20px var(--cyber-blue);
+.clip-path-polygon {
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
 }
 
-/* Cyberpunk Border Glow Effect */
-.cyber-border {
-  border: 2px solid var(--cyber-blue);
-  box-shadow: 0 0 10px var(--cyber-blue);
+.border-wavy {
+  border-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='20' preserveAspectRatio='none'%3E%3Cpath d='M0,10 C30,0 70,20 100,10' stroke='%2300FFFF' stroke-width='2' fill='none' /%3E%3C/svg%3E") 10;
 }
 
-/* Cyberpunk Button Style */
-.cyber-button {
-  @apply relative inline-block px-6 py-3 rounded-md text-lg font-semibold text-white uppercase overflow-hidden;
-  background: linear-gradient(90deg, var(--cyber-blue), var(--cyber-green), var(--cyber-purple), var(--cyber-blue));
-  background-size: 400%;
-  animation: gradientShift 12s infinite linear;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease 0s;
+/* Enhanced Avatar Animations */
+@keyframes avatar-wave {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  25% { transform: rotate(-15deg) translateY(-2px); }
+  50% { transform: rotate(15deg) translateY(-4px); }
+  75% { transform: rotate(-10deg) translateY(-2px); }
 }
 
-.cyber-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 15px var(--cyber-blue);
+@keyframes avatar-heroic {
+  0%, 100% { transform: scale(1) rotateY(0deg); }
+  50% { transform: scale(1.05) rotateY(5deg); }
 }
 
-.cyber-button:before {
-  content: "";
+@keyframes avatar-typing {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-1px) rotate(-2deg); }
+  50% { transform: translateY(-2px) rotate(0deg); }
+  75% { transform: translateY(-1px) rotate(2deg); }
+}
+
+@keyframes avatar-thinking {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  25% { transform: translateX(-1px) rotate(-1deg); }
+  50% { transform: translateX(0) rotate(1deg); }
+  75% { transform: translateX(1px) rotate(-0.5deg); }
+}
+
+@keyframes avatar-salute {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  50% { transform: rotate(-45deg) translateY(-3px); }
+}
+
+@keyframes avatar-cross-arms {
+  0%, 100% { transform: rotate(0deg) translateX(0); }
+  50% { transform: rotate(15deg) translateX(-2px); }
+}
+
+@keyframes avatar-sit {
+  0% { transform: translateY(0) rotate(0deg); }
+  100% { transform: translateY(8px) rotate(45deg); }
+}
+
+@keyframes avatar-stretch {
+  0%, 100% { transform: scaleY(1) translateY(0); }
+  50% { transform: scaleY(1.1) translateY(-3px); }
+}
+
+@keyframes avatar-idle {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-2px) scale(1.01); }
+}
+
+@keyframes arm-wave {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  25% { transform: rotate(-30deg) translateY(-2px); }
+  50% { transform: rotate(30deg) translateY(-4px); }
+  75% { transform: rotate(-15deg) translateY(-2px); }
+}
+
+@keyframes arm-typing {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  50% { transform: rotate(-10deg) translateY(-1px); }
+}
+
+@keyframes arm-salute {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  50% { transform: rotate(-90deg) translateY(-5px); }
+}
+
+@keyframes arm-cross {
+  0%, 100% { transform: rotate(0deg) translateX(0); }
+  50% { transform: rotate(30deg) translateX(3px); }
+}
+
+@keyframes arm-stretch {
+  0%, 100% { transform: rotate(0deg) scaleY(1); }
+  50% { transform: rotate(-15deg) scaleY(1.2); }
+}
+
+@keyframes leg-sit {
+  0% { transform: translateY(0) rotate(0deg); }
+  100% { transform: translateY(6px) rotate(90deg); }
+}
+
+@keyframes breathe-glow {
+  0%, 100% { opacity: 0.1; }
+  50% { opacity: 0.3; }
+}
+
+/* Cybersecurity Background Animation */
+.cyber-grid {
+  position: relative;
+  background: 
+    linear-gradient(90deg, transparent 24%, rgba(37, 99, 235, 0.03) 25%, rgba(37, 99, 235, 0.03) 26%, transparent 27%, transparent 74%, rgba(37, 99, 235, 0.03) 75%, rgba(37, 99, 235, 0.03) 76%, transparent 77%, transparent),
+    linear-gradient(transparent 24%, rgba(37, 99, 235, 0.03) 25%, rgba(37, 99, 235, 0.03) 26%, transparent 27%, transparent 74%, rgba(37, 99, 235, 0.03) 75%, rgba(37, 99, 235, 0.03) 76%, transparent 77%, transparent);
+  background-size: 50px 50px;
+  animation: grid-move 20s linear infinite;
+}
+
+@keyframes grid-move {
+  0% { background-position: 0 0; }
+  100% { background-position: 50px 50px; }
+}
+
+.cyber-grid::before {
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(90deg, var(--cyber-blue), var(--cyber-green), var(--cyber-purple), var(--cyber-blue));
-  background-size: 400%;
-  z-index: -1;
-  border-radius: inherit;
-  transition: opacity 0.3s ease 0s;
-  opacity: 0;
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(34, 197, 94, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(37, 99, 235, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.05) 0%, transparent 50%);
+  animation: cyber-pulse 8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
 }
 
-.cyber-button:hover:before {
-  opacity: 1;
-}
-
-@keyframes gradientShift {
-  0% {
-    background-position: 0%;
-  }
-  100% {
-    background-position: 400%;
-  }
-}
-
-/* Animated Gradient Background */
-.cyber-grid {
-  background: linear-gradient(45deg, #0f0f0f 25%, transparent 25%),
-              linear-gradient(-45deg, #0f0f0f 25%, transparent 25%),
-              linear-gradient(135deg, #0f0f0f 25%, transparent 25%),
-              linear-gradient(-135deg, #0f0f0f 25%, transparent 25%);
-  background-position: 10px 10px, 10px 10px, 10px 10px, 10px 10px;
-  background-size: 20px 20px;
-}
-
-/* Fade-in Animation */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.animate-fade-in {
-  animation: fadeIn 1s ease-out forwards;
-}
-
-/* Slide-up Animation */
-@keyframes slideUp {
-  from {
-    transform: translateY(50px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-.animate-slide-up {
-  animation: slideUp 1s ease-out forwards;
-}
-
-/* Enhanced Avatar Animations for Full Body Movement */
-
-/* Base avatar animations */
-@keyframes avatar-idle {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  25% { transform: translateY(-2px) rotate(0.3deg); }
-  50% { transform: translateY(-1px) rotate(0deg); }
-  75% { transform: translateY(-3px) rotate(-0.3deg); }
-}
-
-@keyframes avatar-wave {
-  0%, 100% { transform: translateY(0px) scale(1); }
-  25% { transform: translateY(-4px) scale(1.02); }
-  50% { transform: translateY(-2px) scale(1.01); }
-  75% { transform: translateY(-3px) scale(1.02); }
-}
-
-@keyframes avatar-heroic {
-  0%, 100% { transform: translateY(0px) scale(1) rotate(0deg); }
-  33% { transform: translateY(-6px) scale(1.05) rotate(-1deg); }
-  66% { transform: translateY(-4px) scale(1.03) rotate(1deg); }
-}
-
-@keyframes avatar-thinking {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  25% { transform: translateY(-1px) rotate(0.5deg); }
-  50% { transform: translateY(0px) rotate(0deg); }
-  75% { transform: translateY(-2px) rotate(-0.5deg); }
-}
-
-@keyframes avatar-victory {
-  0%, 100% { transform: translateY(0px) scale(1); }
-  50% { transform: translateY(-5px) scale(1.08); }
-}
-
-@keyframes avatar-stretch {
-  0%, 100% { transform: translateY(0px) scale(1, 1); }
-  50% { transform: translateY(-3px) scale(1.02, 1.05); }
-}
-
-/* Body part specific animations */
-@keyframes arm-wave {
-  0%, 100% { transform: rotate(-5deg) translateY(0px); }
-  25% { transform: rotate(-45deg) translateY(-2px); }
-  50% { transform: rotate(-15deg) translateY(-1px); }
-  75% { transform: rotate(-60deg) translateY(-3px); }
-}
-
-@keyframes arm-heroic {
-  0%, 100% { transform: rotate(15deg) translateY(0px); }
-  50% { transform: rotate(-30deg) translateY(-2px); }
-}
-
-@keyframes arm-stretch {
-  0%, 100% { transform: rotate(0deg) translateY(0px); }
-  50% { transform: rotate(-90deg) translateY(-4px); }
-}
-
-@keyframes arm-victory {
-  0%, 100% { transform: rotate(-45deg) translateY(-2px); }
-  50% { transform: rotate(-60deg) translateY(-4px); }
-}
-
-/* Head animations */
-.avatar-head {
-  animation: head-bob 4s ease-in-out infinite;
-}
-
-@keyframes head-bob {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  25% { transform: translateY(-1px) rotate(0.5deg); }
-  75% { transform: translateY(-0.5px) rotate(-0.3deg); }
-}
-
-/* Torso breathing */
-.avatar-torso {
-  animation: torso-breathe 3s ease-in-out infinite;
-}
-
-@keyframes torso-breathe {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.02); }
-}
-
-/* Enhanced breathing glow */
-@keyframes breathe-glow {
+@keyframes cyber-pulse {
   0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.6; }
+  50% { opacity: 0.7; }
 }
 
-/* Smooth transition classes for joints */
-.avatar-arm-left,
-.avatar-arm-right,
-.avatar-leg-left,
-.avatar-leg-right {
-  transform-origin: top center;
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+/* Matrix Code Effect */
+.matrix-bg::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(rgba(34, 197, 94, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 197, 94, 0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+  animation: matrix-rain 15s linear infinite;
+  pointer-events: none;
+  z-index: -1;
 }
 
-.avatar-hand-left,
-.avatar-hand-right {
-  transform-origin: center;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.avatar-foot-left,
-.avatar-foot-right {
-  transform-origin: center;
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Enhanced hover effects for avatar */
-.avatar-container:hover {
-  transform: scale(1.02);
-}
-
-/* Equipment glow effects */
-.equipment-glow {
-  filter: drop-shadow(0 0 8px rgba(0, 255, 255, 0.6));
-}
-
-/* Utility class for smooth imports */
-.cn {
-  @apply transition-all duration-300 ease-in-out;
+@keyframes matrix-rain {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
 }

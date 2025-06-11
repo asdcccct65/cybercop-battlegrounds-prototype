@@ -1,4 +1,3 @@
-
 import React from "react"
 import { BadgeCard } from "@/components/BadgeCard"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -15,6 +14,8 @@ import {
   Clock,
   Trophy
 } from "lucide-react"
+import { useMissionProgress } from "@/hooks/useMissionProgress"
+import { allMissions } from "@/data/labMissions"
 
 const badges = [
   {
@@ -71,9 +72,14 @@ const badges = [
 ]
 
 const ProgressTracker = () => {
+  const { progress, getTotalScore } = useMissionProgress()
+  const totalMissions = allMissions.length
+  const completedMissions = progress.length
+  const totalScore = getTotalScore()
+  
   const earnedBadges = badges.filter(badge => badge.earned).length
   const totalBadges = badges.length
-  const overallProgress = (earnedBadges / totalBadges) * 100
+  const overallProgress = totalMissions > 0 ? (completedMissions / totalMissions) * 100 : 0
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -105,19 +111,20 @@ const ProgressTracker = () => {
             <Target className="h-4 w-4 text-cyber-green" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-cyber-green">38</div>
-            <p className="text-xs text-muted-foreground">+7 this week</p>
+            <div className="text-2xl font-bold text-cyber-green">{completedMissions}/{totalMissions}</div>
+            <Progress value={overallProgress} className="mt-2" />
+            <p className="text-xs text-muted-foreground mt-1">{Math.round(overallProgress)}% complete</p>
           </CardContent>
         </Card>
 
         <Card className="border-cyber-orange/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Current Streak</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Score</CardTitle>
             <TrendingUp className="h-4 w-4 text-cyber-orange" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-cyber-orange">12 days</div>
-            <p className="text-xs text-muted-foreground">Personal best!</p>
+            <div className="text-2xl font-bold text-cyber-orange">{totalScore}</div>
+            <p className="text-xs text-muted-foreground">Points earned</p>
           </CardContent>
         </Card>
 
