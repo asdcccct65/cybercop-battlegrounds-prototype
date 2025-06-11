@@ -1,4 +1,3 @@
-
 import React, { useState } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
@@ -9,6 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { EnhancedAvatar } from "./EnhancedAvatar"
 import { CharacterCustomization } from "@/hooks/useUserProfile"
 import { Palette, Edit3, Sparkles, User } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 interface ImprovedCharacterCreatorProps {
   isOpen: boolean
