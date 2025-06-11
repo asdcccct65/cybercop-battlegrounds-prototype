@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react"
 import { CharacterCustomization } from "@/hooks/useUserProfile"
 import { cn } from "@/lib/utils"
@@ -79,15 +80,45 @@ export function AnimatedAvatar({
   const getAnimationClasses = () => {
     switch (currentAnimation) {
       case "wave":
-        return "animate-bounce"
+        return "animate-[wave_2s_ease-in-out_infinite]"
       case "heroic":
-        return "transform scale-105"
+        return "animate-[heroic_3s_ease-in-out_infinite]"
       case "sit":
-        return "transform translate-y-2"
+        return "animate-[sit_1s_ease-out_forwards]"
       case "breathe":
-        return "animate-pulse"
+        return "animate-[breathe_4s_ease-in-out_infinite]"
       default:
-        return "animate-[gentle-sway_4s_ease-in-out_infinite]"
+        return "animate-[idle_6s_ease-in-out_infinite]"
+    }
+  }
+
+  const getArmClasses = (side: 'left' | 'right') => {
+    const baseClasses = "absolute w-2 h-6 rounded-full transition-all duration-500 origin-top"
+    switch (currentAnimation) {
+      case "wave":
+        return side === 'right' 
+          ? `${baseClasses} animate-[arm-wave_2s_ease-in-out_infinite]`
+          : `${baseClasses} animate-[arm-sway_6s_ease-in-out_infinite]`
+      case "heroic":
+        return `${baseClasses} animate-[arm-heroic_3s_ease-in-out_infinite]`
+      case "sit":
+        return `${baseClasses} animate-[arm-rest_1s_ease-out_forwards]`
+      default:
+        return `${baseClasses} animate-[arm-sway_6s_ease-in-out_infinite]`
+    }
+  }
+
+  const getLegClasses = (side: 'left' | 'right') => {
+    const baseClasses = "absolute w-2 h-8 rounded-full transition-all duration-500 origin-top"
+    switch (currentAnimation) {
+      case "sit":
+        return `${baseClasses} animate-[leg-sit_1s_ease-out_forwards]`
+      case "heroic":
+        return side === 'left'
+          ? `${baseClasses} animate-[leg-heroic-left_3s_ease-in-out_infinite]`
+          : `${baseClasses} animate-[leg-heroic-right_3s_ease-in-out_infinite]`
+      default:
+        return `${baseClasses} animate-[leg-idle_6s_ease-in-out_infinite]`
     }
   }
 
@@ -145,7 +176,7 @@ export function AnimatedAvatar({
         {/* Character Body */}
         <div className="relative w-full h-full">
           {/* Head */}
-          <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-8 h-8 rounded-full border shadow-inner" 
+          <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-8 h-8 rounded-full border shadow-inner animate-[head-bob_6s_ease-in-out_infinite]" 
                style={{ backgroundColor: character.skinColor }}>
             
             {/* Hair */}
@@ -178,25 +209,25 @@ export function AnimatedAvatar({
           </div>
 
           {/* Torso */}
-          <div className="absolute top-10 left-1/2 transform -translate-x-1/2 w-6 h-8 rounded-t-lg" 
+          <div className="absolute top-10 left-1/2 transform -translate-x-1/2 w-6 h-8 rounded-t-lg animate-[torso-breathe_4s_ease-in-out_infinite]" 
                style={{ backgroundColor: character.skinColor }}>
             {/* Shirt */}
             <div className="absolute inset-0 bg-cyber-blue/30 rounded-t-lg"></div>
           </div>
 
-          {/* Arms */}
-          <div className="absolute top-12 left-2 w-2 h-6 rounded-full" 
+          {/* Arms with improved movement */}
+          <div className={cn("top-12 left-2", getArmClasses('left'))} 
                style={{ backgroundColor: character.skinColor }}></div>
-          <div className="absolute top-12 right-2 w-2 h-6 rounded-full" 
+          <div className={cn("top-12 right-2", getArmClasses('right'))} 
                style={{ backgroundColor: character.skinColor }}></div>
 
-          {/* Legs */}
-          <div className="absolute top-18 left-1/2 transform -translate-x-1/2 -translate-x-1 w-2 h-8 rounded-full bg-cyber-green/30"></div>
-          <div className="absolute top-18 left-1/2 transform -translate-x-1/2 translate-x-1 w-2 h-8 rounded-full bg-cyber-green/30"></div>
+          {/* Legs with improved movement */}
+          <div className={cn("top-18 left-1/2 transform -translate-x-1/2 -translate-x-1", getLegClasses('left'), "bg-cyber-green/30")}></div>
+          <div className={cn("top-18 left-1/2 transform -translate-x-1/2 translate-x-1", getLegClasses('right'), "bg-cyber-green/30")}></div>
 
           {/* Feet */}
-          <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 -translate-x-1.5 w-3 h-1.5 rounded-full bg-gray-800"></div>
-          <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 translate-x-1.5 w-3 h-1.5 rounded-full bg-gray-800"></div>
+          <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 -translate-x-1.5 w-3 h-1.5 rounded-full bg-gray-800 animate-[foot-tap_8s_ease-in-out_infinite]"></div>
+          <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 translate-x-1.5 w-3 h-1.5 rounded-full bg-gray-800 animate-[foot-tap_8s_ease-in-out_infinite_0.5s]"></div>
         </div>
 
         {/* Equipment overlays */}

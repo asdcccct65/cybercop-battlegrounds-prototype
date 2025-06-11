@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 import ModeSelection from "./pages/ModeSelection";
 import MissionDashboard from "./pages/MissionDashboard";
 import ProgressTracker from "./pages/ProgressTracker";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
             <Route path="/mode-selection" element={<Layout><ModeSelection /></Layout>} />
             <Route path="/missions" element={<Layout><MissionDashboard /></Layout>} />
             <Route path="/progress" element={<Layout><ProgressTracker /></Layout>} />
+            <Route path="/settings" element={<Layout><Settings /></Layout>} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
