@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react"
 import { CharacterCustomization } from "@/hooks/useUserProfile"
 import { cn } from "@/lib/utils"
@@ -7,7 +6,7 @@ interface AnimatedAvatarProps {
   character: CharacterCustomization
   size?: "sm" | "md" | "lg" | "xl"
   className?: string
-  animation?: "idle" | "wave" | "heroic" | "sit" | "breathe"
+  animation?: string
   showAnimationControls?: boolean
   onAnimationChange?: (animation: string) => void
 }
@@ -38,7 +37,6 @@ export function AnimatedAvatar({
     { id: "breathe", name: "Breathe", emoji: "💨" }
   ]
 
-  // Auto-blink effect
   useEffect(() => {
     const blinkInterval = setInterval(() => {
       setIsBlinking(true)

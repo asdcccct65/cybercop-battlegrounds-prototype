@@ -1,4 +1,3 @@
-
 import React, { useState } from "react"
 import { Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
@@ -15,7 +14,7 @@ const Index = () => {
   const { profile, completeOnboarding, updateCharacter } = useUserProfile()
   const [showStore, setShowStore] = useState(false)
   const [showCharacterEdit, setShowCharacterEdit] = useState(false)
-  const [avatarAnimation, setAvatarAnimation] = useState("idle")
+  const [avatarAnimation, setAvatarAnimation] = useState<string>("idle")
 
   const handleCharacterSave = (character: any) => {
     updateCharacter(character)

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
@@ -93,7 +92,7 @@ export function CharacterCreator({
       equippedItems: {}
     }
   )
-  const [previewAnimation, setPreviewAnimation] = useState("idle")
+  const [previewAnimation, setPreviewAnimation] = useState<string>("idle")
 
   const handleComplete = () => {
     if (editMode && onSave) {
