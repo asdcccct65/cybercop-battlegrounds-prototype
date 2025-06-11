@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -88,18 +89,6 @@
   --cyber-green: #00FF7F;
   --cyber-purple: #A020F0;
   --cyber-orange: #FF8C00;
-}
-
-/* Apply custom colors using tailwind's theme extension */
-theme: {
-  extend: {
-    colors: {
-      'cyber-blue': 'var(--cyber-blue)',
-      'cyber-green': 'var(--cyber-green)',
-      'cyber-purple': 'var(--cyber-purple)',
-      'cyber-orange': 'var(--cyber-orange)',
-    },
-  },
 }
 
 /* Cyberpunk Text Glow Effect */
@@ -282,4 +271,51 @@ theme: {
 @keyframes foot-tap {
   0%, 90%, 100% { transform: translateX(-50%) scale(1); }
   5% { transform: translateX(-50%) scale(1.1); }
+}
+
+/* Natural joint movement and fluid transitions */
+@keyframes shoulder-roll {
+  0%, 100% { transform: translateX(-50%) rotateZ(0deg) rotateY(0deg); }
+  25% { transform: translateX(-50%) rotateZ(2deg) rotateY(5deg); }
+  75% { transform: translateX(-50%) rotateZ(-2deg) rotateY(-5deg); }
+}
+
+@keyframes elbow-bend {
+  0%, 100% { transform: rotateZ(0deg); }
+  50% { transform: rotateZ(15deg); }
+}
+
+@keyframes wrist-flex {
+  0%, 100% { transform: rotateZ(0deg); }
+  50% { transform: rotateZ(10deg); }
+}
+
+@keyframes hip-sway {
+  0%, 100% { transform: translateX(-50%) rotateZ(0deg); }
+  50% { transform: translateX(-50%) rotateZ(1deg); }
+}
+
+@keyframes knee-bend {
+  0%, 100% { transform: rotateZ(0deg); }
+  50% { transform: rotateZ(5deg); }
+}
+
+@keyframes ankle-flex {
+  0%, 100% { transform: rotateZ(0deg); }
+  50% { transform: rotateZ(3deg); }
+}
+
+/* Smooth transition classes */
+.avatar-joint {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.avatar-limb {
+  transform-origin: top center;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.avatar-extremity {
+  transform-origin: center;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
