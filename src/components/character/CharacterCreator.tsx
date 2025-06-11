@@ -6,9 +6,9 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { CharacterAvatar } from "./CharacterAvatar"
+import { AnimatedAvatar } from "./AnimatedAvatar"
 import { CharacterCustomization } from "@/hooks/useUserProfile"
-import { Palette, Edit3 } from "lucide-react"
+import { Palette, Edit3, Sparkles } from "lucide-react"
 
 interface CharacterCreatorProps {
   isOpen: boolean
@@ -32,7 +32,21 @@ const skinColors = [
   "#F4E4D6"  // Pale
 ]
 
-const hairStyles = ["short", "long", "curly", "spiky", "wavy", "braided", "bald", "buzz-cut"]
+// Expanded hairstyles with better variety
+const hairStyles = [
+  { id: "short", name: "Short", description: "Classic short cut" },
+  { id: "long", name: "Long", description: "Flowing long hair" },
+  { id: "curly", name: "Curly", description: "Natural curls" },
+  { id: "spiky", name: "Spiky", description: "Edgy spikes" },
+  { id: "wavy", name: "Wavy", description: "Gentle waves" },
+  { id: "braided", name: "Braided", description: "Elegant braids" },
+  { id: "afro", name: "Afro", description: "Natural afro" },
+  { id: "buzz-cut", name: "Buzz Cut", description: "Military style" },
+  { id: "ponytail", name: "Ponytail", description: "High ponytail" },
+  { id: "bob", name: "Bob", description: "Classic bob cut" },
+  { id: "mohawk", name: "Mohawk", description: "Punk mohawk" },
+  { id: "bald", name: "Bald", description: "No hair" }
+]
 
 // Natural hair colors
 const hairColors = [
@@ -43,7 +57,9 @@ const hairColors = [
   "#B22222", // Red
   "#696969", // Gray
   "#FFFFFF", // White
-  "#800080"  // Fantasy Purple
+  "#800080", // Fantasy Purple
+  "#FF1493", // Hot Pink
+  "#00CED1"  // Cyber Blue
 ]
 
 // Natural eye colors
@@ -77,6 +93,7 @@ export function CharacterCreator({
       equippedItems: {}
     }
   )
+  const [previewAnimation, setPreviewAnimation] = useState("idle")
 
   const handleComplete = () => {
     if (editMode && onSave) {
@@ -115,7 +132,7 @@ export function CharacterCreator({
 
   return (
     <Dialog open={isOpen} onOpenChange={editMode ? onCancel : () => {}}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl bg-gradient-to-r from-cyber-blue to-cyber-green bg-clip-text text-transparent flex items-center space-x-2">
             {editMode ? (
@@ -124,16 +141,25 @@ export function CharacterCreator({
                 <span>Customize Your Avatar</span>
               </>
             ) : (
-              <span>Create Your Cyber Agent</span>
+              <>
+                <Sparkles className="h-6 w-6 text-cyber-blue" />
+                <span>Create Your Cyber Agent</span>
+              </>
             )}
           </DialogTitle>
         </DialogHeader>
 
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid lg:grid-cols-2 gap-8">
           {/* Character Preview */}
           <div className="flex flex-col items-center space-y-6">
             <div className="relative">
-              <CharacterAvatar character={character} size="lg" />
+              <AnimatedAvatar 
+                character={character} 
+                size="xl" 
+                animation={previewAnimation}
+                showAnimationControls={true}
+                onAnimationChange={setPreviewAnimation}
+              />
               <Badge className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-cyber-blue/10 border-cyber-blue">
                 {editMode ? "Preview" : "Your Agent"}
               </Badge>
@@ -147,7 +173,7 @@ export function CharacterCreator({
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="Enter your agent name"
-                  className="max-w-xs"
+                  className="max-w-xs text-center"
                   maxLength={20}
                 />
               </div>
@@ -165,18 +191,20 @@ export function CharacterCreator({
                   label="Skin Tone"
                 />
 
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Label className="text-sm font-medium">Hair Style</Label>
-                  <div className="grid grid-cols-4 gap-2">
+                  <div className="grid grid-cols-3 gap-2">
                     {hairStyles.map(style => (
                       <Button
-                        key={style}
-                        variant={character.hairStyle === style ? "default" : "outline"}
+                        key={style.id}
+                        variant={character.hairStyle === style.id ? "default" : "outline"}
                         size="sm"
-                        onClick={() => setCharacter(prev => ({ ...prev, hairStyle: style }))}
-                        className="capitalize text-xs"
+                        onClick={() => setCharacter(prev => ({ ...prev, hairStyle: style.id }))}
+                        className="text-xs h-auto py-2 px-2 flex flex-col items-center space-y-1"
+                        title={style.description}
                       >
-                        {style}
+                        <span className="font-medium">{style.name}</span>
+                        <span className="text-xs opacity-75">{style.description}</span>
                       </Button>
                     ))}
                   </div>

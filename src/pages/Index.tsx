@@ -6,32 +6,42 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { CyberLogo } from "@/components/CyberLogo"
 import { CharacterCreator } from "@/components/character/CharacterCreator"
-import { CharacterAvatar } from "@/components/character/CharacterAvatar"
+import { AnimatedAvatar } from "@/components/character/AnimatedAvatar"
 import { EquipmentStore } from "@/components/store/EquipmentStore"
 import { useUserProfile } from "@/hooks/useUserProfile"
-import { ArrowRight, Shield, Target, Trophy, ShoppingBag, Gem, Edit3, Settings } from "lucide-react"
+import { ArrowRight, Shield, Target, Trophy, ShoppingBag, Gem, Edit3, Settings, Sparkles } from "lucide-react"
 
 const Index = () => {
   const { profile, completeOnboarding, updateCharacter } = useUserProfile()
   const [showStore, setShowStore] = useState(false)
   const [showCharacterEdit, setShowCharacterEdit] = useState(false)
+  const [avatarAnimation, setAvatarAnimation] = useState("idle")
 
   const handleCharacterSave = (character: any) => {
     updateCharacter(character)
     setShowCharacterEdit(false)
   }
 
+  const userLevel = Math.floor(profile.shards / 100) + 1
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
       <div className="container mx-auto px-4 py-8">
-        {/* Enhanced User HUD */}
+        {/* Enhanced User HUD with Animated Avatar */}
         {!profile.isNewUser && (
           <div className="fixed top-4 right-4 z-50 flex items-center space-x-3">
             <Card className="bg-card/90 backdrop-blur-sm border-cyber-blue/30 shadow-lg">
               <CardContent className="p-4 flex items-center space-x-4">
-                <CharacterAvatar character={profile.character} size="sm" />
+                <AnimatedAvatar 
+                  character={profile.character} 
+                  size="sm" 
+                  animation="idle"
+                />
                 <div className="text-sm">
-                  <p className="font-semibold">{profile.username}</p>
+                  <p className="font-semibold flex items-center space-x-2">
+                    <span>{profile.username}</span>
+                    <Badge variant="outline" className="text-xs">Lv.{userLevel}</Badge>
+                  </p>
                   <div className="flex items-center space-x-3">
                     <div className="flex items-center space-x-1">
                       <Gem className="h-4 w-4 text-cyber-blue" />
@@ -77,7 +87,7 @@ const Index = () => {
               Master Cybersecurity Through Practice
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Join the ultimate cybersecurity training platform. Create your unique avatar, complete missions, 
+              Join the ultimate cybersecurity training platform. Create your unique animated avatar, complete missions, 
               earn shards, and unlock legendary equipment as you master digital defense.
             </p>
             {!profile.isNewUser && (
@@ -86,7 +96,7 @@ const Index = () => {
                   Welcome back, Agent {profile.username}!
                 </Badge>
                 <Badge variant="outline" className="bg-cyber-green/10 border-cyber-green text-cyber-green">
-                  Level {Math.floor(profile.shards / 100) + 1}
+                  Level {userLevel}
                 </Badge>
               </div>
             )}
@@ -124,15 +134,16 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Enhanced Character Showcase */}
+        {/* Enhanced Character Showcase with Full Body Avatar */}
         {!profile.isNewUser && (
           <div className="mb-16">
             <Card className="bg-gradient-to-r from-cyber-blue/10 via-cyber-green/10 to-cyber-purple/10 border-cyber-blue/30 hover:border-cyber-blue/50 transition-all duration-300">
               <CardContent className="p-8">
-                <div className="grid md:grid-cols-3 gap-8 items-center">
-                  <div className="text-center md:text-left space-y-4">
-                    <h3 className="text-2xl font-bold bg-gradient-to-r from-cyber-blue to-cyber-green bg-clip-text text-transparent">
-                      Agent {profile.username}
+                <div className="grid lg:grid-cols-3 gap-8 items-center">
+                  <div className="text-center lg:text-left space-y-4">
+                    <h3 className="text-2xl font-bold bg-gradient-to-r from-cyber-blue to-cyber-green bg-clip-text text-transparent flex items-center space-x-2">
+                      <Sparkles className="h-6 w-6 text-cyber-blue" />
+                      <span>Agent {profile.username}</span>
                     </h3>
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div className="flex items-center space-x-2">
@@ -159,7 +170,7 @@ const Index = () => {
                       <div className="flex items-center space-x-2">
                         <Settings className="h-5 w-5 text-cyber-purple" />
                         <div>
-                          <p className="font-semibold">Level {Math.floor(profile.shards / 100) + 1}</p>
+                          <p className="font-semibold">Level {userLevel}</p>
                           <p className="text-muted-foreground">Agent Rank</p>
                         </div>
                       </div>
@@ -168,8 +179,14 @@ const Index = () => {
                   
                   <div className="flex justify-center">
                     <div className="relative">
-                      <CharacterAvatar character={profile.character} size="lg" />
-                      <div className="absolute -inset-2 bg-gradient-to-r from-cyber-blue/20 to-cyber-green/20 rounded-full animate-pulse"></div>
+                      <AnimatedAvatar 
+                        character={profile.character} 
+                        size="xl" 
+                        animation={avatarAnimation}
+                        showAnimationControls={true}
+                        onAnimationChange={setAvatarAnimation}
+                      />
+                      <div className="absolute -inset-4 bg-gradient-to-r from-cyber-blue/20 to-cyber-green/20 rounded-xl animate-pulse opacity-50"></div>
                     </div>
                   </div>
 
@@ -219,7 +236,7 @@ const Index = () => {
               </div>
               <CardTitle className="text-cyber-green">Earn Shards & Level Up</CardTitle>
               <CardDescription>
-                Complete missions to earn Shards and unlock amazing equipment for your avatar
+                Complete missions to earn Shards and unlock amazing equipment for your animated avatar
               </CardDescription>
             </CardHeader>
           </Card>
@@ -231,7 +248,7 @@ const Index = () => {
               </div>
               <CardTitle className="text-cyber-orange">Customize Your Agent</CardTitle>
               <CardDescription>
-                Create your unique avatar and collect legendary gear as you progress through missions
+                Create your unique animated avatar and collect legendary gear as you progress through missions
               </CardDescription>
             </CardHeader>
           </Card>
@@ -244,7 +261,7 @@ const Index = () => {
               Ready to Begin Your Cyber Journey?
             </h2>
             <p className="text-muted-foreground mb-6 max-w-xl mx-auto">
-              Create your unique avatar, master cybersecurity skills, and unlock an arsenal of legendary equipment. 
+              Create your unique animated avatar, master cybersecurity skills, and unlock an arsenal of legendary equipment. 
               Join thousands of agents who have elevated their skills through CyberCop's immersive training.
             </p>
             <Button asChild size="lg" className="bg-cyber-blue hover:bg-cyber-blue/80 text-white">
