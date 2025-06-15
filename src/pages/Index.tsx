@@ -34,7 +34,7 @@ const Index = () => {
   return (
     <>
       <main className="flex-1 p-6 cyber-grid matrix-bg">
-        {/* Hero Section with Enhanced 3D Avatar */}
+        {/* Hero Section with Game-Quality 3D Avatar */}
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[70vh]">
             {/* Left Column - Hero Content */}
@@ -45,7 +45,7 @@ const Index = () => {
                 </h1>
                 <p className="text-xl text-muted-foreground leading-relaxed">
                   Master cybersecurity through immersive simulations, competitive missions, and hands-on learning. 
-                  Join thousands of cyber agents protecting the digital frontier.
+                  Experience next-generation 3D avatar technology with your personalized cyber agent.
                 </p>
               </div>
 
@@ -53,7 +53,7 @@ const Index = () => {
                 <Button 
                   onClick={() => navigate('/mode-selection')}
                   size="lg" 
-                  className="bg-cyber-blue hover:bg-cyber-blue/80 text-white px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-cyber-blue/25 transition-all duration-300"
+                  className="bg-cyber-blue hover:bg-cyber-blue/80 text-white px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-cyber-blue/25 transition-all duration-300 hover:scale-105"
                 >
                   Start Training
                 </Button>
@@ -61,46 +61,55 @@ const Index = () => {
                   onClick={() => setShowCharacterCreator(true)}
                   variant="outline" 
                   size="lg"
-                  className="border-cyber-green text-cyber-green hover:bg-cyber-green/10 px-8 py-4 text-lg font-semibold"
+                  className="border-cyber-green text-cyber-green hover:bg-cyber-green/10 px-8 py-4 text-lg font-semibold hover:scale-105 transition-all duration-300"
                 >
                   Customize Agent
                 </Button>
               </div>
 
-              {/* User Stats */}
+              {/* Enhanced User Stats */}
               <div className="grid grid-cols-3 gap-6">
-                <div className="text-center p-4 rounded-xl bg-cyber-blue/10 border border-cyber-blue/20">
+                <div className="text-center p-4 rounded-xl bg-gradient-to-br from-cyber-blue/10 to-cyber-blue/5 border border-cyber-blue/20 hover:border-cyber-blue/40 transition-all duration-300">
                   <div className="text-2xl font-bold text-cyber-blue">{profile.shards}</div>
                   <div className="text-sm text-muted-foreground">Shards Earned</div>
                 </div>
-                <div className="text-center p-4 rounded-xl bg-cyber-green/10 border border-cyber-green/20">
+                <div className="text-center p-4 rounded-xl bg-gradient-to-br from-cyber-green/10 to-cyber-green/5 border border-cyber-green/20 hover:border-cyber-green/40 transition-all duration-300">
                   <div className="text-2xl font-bold text-cyber-green">{userLevel}</div>
                   <div className="text-sm text-muted-foreground">Agent Level</div>
                 </div>
-                <div className="text-center p-4 rounded-xl bg-cyber-purple/10 border border-cyber-purple/20">
+                <div className="text-center p-4 rounded-xl bg-gradient-to-br from-cyber-purple/10 to-cyber-purple/5 border border-cyber-purple/20 hover:border-cyber-purple/40 transition-all duration-300">
                   <div className="text-2xl font-bold text-cyber-purple">{completedMissions}</div>
                   <div className="text-sm text-muted-foreground">Missions Done</div>
                 </div>
               </div>
             </div>
 
-            {/* Right Column - Enhanced 3D Avatar Display */}
+            {/* Right Column - Game-Quality 3D Avatar Showcase */}
             <div className="flex flex-col items-center space-y-6">
-              <div className="text-center space-y-4">
-                <h2 className="text-2xl font-bold text-cyber-blue">Agent {profile.username}</h2>
+              <div className="text-center space-y-6">
+                <div className="space-y-2">
+                  <h2 className="text-3xl font-bold bg-gradient-to-r from-cyber-blue to-cyber-green bg-clip-text text-transparent">
+                    Agent {profile.username}
+                  </h2>
+                  <p className="text-sm text-muted-foreground">
+                    Fully rigged • Anime-style • Real-time physics
+                  </p>
+                </div>
+                
                 <Avatar3DController 
                   character={profile.character} 
                   size="xl"
                   showControls={true}
                   allowRotation={true}
-                  className="hover:scale-105 transition-transform duration-300"
+                  className="hover:scale-[1.02] transition-transform duration-500"
                 />
+                
                 <div className="flex gap-3">
                   <Button 
                     onClick={() => setShowCharacterCreator(true)}
                     variant="outline"
                     size="sm"
-                    className="border-cyber-blue text-cyber-blue hover:bg-cyber-blue/10"
+                    className="border-cyber-blue text-cyber-blue hover:bg-cyber-blue/10 hover:scale-105 transition-all duration-300"
                   >
                     <Edit className="h-4 w-4 mr-2" />
                     Edit Character
@@ -109,7 +118,7 @@ const Index = () => {
                     onClick={() => navigate('/settings')}
                     variant="outline"
                     size="sm"
-                    className="border-cyber-green text-cyber-green hover:bg-cyber-green/10"
+                    className="border-cyber-green text-cyber-green hover:bg-cyber-green/10 hover:scale-105 transition-all duration-300"
                   >
                     <Settings className="h-4 w-4 mr-2" />
                     Settings
@@ -119,9 +128,9 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Quick Actions */}
+          {/* Quick Actions with enhanced styling */}
           <div className="grid md:grid-cols-3 gap-6 mt-16">
-            <Card className="border-cyber-blue/30 hover:border-cyber-blue/50 transition-all duration-300 hover:shadow-lg hover:shadow-cyber-blue/10 group cursor-pointer"
+            <Card className="border-cyber-blue/30 hover:border-cyber-blue/50 transition-all duration-300 hover:shadow-lg hover:shadow-cyber-blue/10 group cursor-pointer hover:scale-105"
                   onClick={() => navigate('/missions')}>
               <CardHeader className="text-center">
                 <Target className="h-12 w-12 mx-auto text-cyber-blue group-hover:scale-110 transition-transform duration-300" />
@@ -130,7 +139,7 @@ const Index = () => {
               </CardHeader>
             </Card>
             
-            <Card className="border-cyber-green/30 hover:border-cyber-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-cyber-green/10 group cursor-pointer"
+            <Card className="border-cyber-green/30 hover:border-cyber-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-cyber-green/10 group cursor-pointer hover:scale-105"
                   onClick={() => navigate('/progress')}>
               <CardHeader className="text-center">
                 <Trophy className="h-12 w-12 mx-auto text-cyber-green group-hover:scale-110 transition-transform duration-300" />
@@ -139,7 +148,7 @@ const Index = () => {
               </CardHeader>
             </Card>
             
-            <Card className="border-cyber-purple/30 hover:border-cyber-purple/50 transition-all duration-300 hover:shadow-lg hover:shadow-cyber-purple/10 group cursor-pointer"
+            <Card className="border-cyber-purple/30 hover:border-cyber-purple/50 transition-all duration-300 hover:shadow-lg hover:shadow-cyber-purple/10 group cursor-pointer hover:scale-105"
                   onClick={() => navigate('/mode-selection')}>
               <CardHeader className="text-center">
                 <Users className="h-12 w-12 mx-auto text-cyber-purple group-hover:scale-110 transition-transform duration-300" />
@@ -157,7 +166,7 @@ const Index = () => {
           <DialogHeader>
             <DialogTitle>Welcome, Cyber Agent!</DialogTitle>
             <DialogDescription>
-              Set up your agent profile to begin your cybersecurity training.
+              Set up your agent profile to begin your cybersecurity training with our game-quality 3D avatar system.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
@@ -168,7 +177,7 @@ const Index = () => {
               <Input id="name" value={username} onChange={(e) => setUsername(e.target.value)} className="col-span-3" />
             </div>
           </div>
-          <Button onClick={handleComplete}>
+          <Button onClick={handleComplete} className="bg-cyber-blue hover:bg-cyber-blue/80">
             Complete Onboarding
           </Button>
         </DialogContent>
