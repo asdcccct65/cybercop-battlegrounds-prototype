@@ -1,3 +1,4 @@
+
 import React, { useState } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
@@ -5,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { EnhancedAvatar } from "./EnhancedAvatar"
+import { AdvancedAvatar } from "./AdvancedAvatar"
 import { CharacterCustomization } from "@/hooks/useUserProfile"
 import { Palette, Edit3, Sparkles, User } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -158,15 +159,16 @@ export function ImprovedCharacterCreator({
         </DialogHeader>
 
         <div className="grid lg:grid-cols-5 gap-8">
-          {/* Character Preview */}
+          {/* Enhanced Character Preview */}
           <div className="lg:col-span-2 flex flex-col items-center space-y-6">
             <div className="relative">
-              <EnhancedAvatar 
+              <AdvancedAvatar 
                 character={character} 
                 size="xl" 
                 animation={previewAnimation}
                 showAnimationControls={true}
                 onAnimationChange={setPreviewAnimation}
+                showFullBody={true}
               />
               <Badge className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 bg-cyber-blue/10 border-cyber-blue text-cyber-blue">
                 {editMode ? "Preview Changes" : "Your Agent"}
