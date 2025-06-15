@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useState } from 'react'
 import { Canvas, useFrame, extend, ThreeElements } from '@react-three/fiber'
 import { OrbitControls, PerspectiveCamera, Environment, ContactShadows } from '@react-three/drei'
@@ -455,8 +454,7 @@ export const Avatar3D: React.FC<Avatar3DProps> = ({
         }}
         gl={{ 
           antialias: true, 
-          alpha: true,
-          shadowMap: true
+          alpha: true
         }}
       >
         {/* Advanced lighting setup */}
