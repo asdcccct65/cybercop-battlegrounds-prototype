@@ -32,7 +32,7 @@ interface Avatar3DProps {
   className?: string
 }
 
-// Enhanced 3D Avatar Mesh Component with proper rigging
+// Improved mesh, proportions, hair, and facial detail
 function AvatarMesh({ 
   character, 
   animation = 'idle', 
@@ -151,265 +151,285 @@ function AvatarMesh({
     }
   })
 
-  // Advanced materials with anime-style shading
-  const createAnimeMaterial = (color: string, metalness = 0.1, roughness = 0.8) => {
-    return new THREE.MeshToonMaterial({
-      color,
-      transparent: true,
-      opacity: 0.95,
-    })
-  }
-
-  const skinMaterial = createAnimeMaterial(character.skinColor, 0.05, 0.9)
-  const hairMaterial = createAnimeMaterial(character.hairColor, 0.02, 0.95)
-  const clothingMaterial = createAnimeMaterial('#4A90E2', 0.1, 0.7)
-  const pantsMaterial = createAnimeMaterial('#2C3E50', 0.15, 0.8)
-
-  // Eye material with proper shine
+  // --- PROPORTIONS: Heroic/anime, 7.5 heads tall ---
+  // Body unit: head height = 0.23 (good sphere size for stylized anime)
+  // Shoulders: widened, thighs/calf shape improved, waist tapered.
+  // New Cel-shaded skin material with a soft gradient texture
+  // Materials
+  const skinMaterial = new THREE.MeshToonMaterial({
+    color: character.skinColor, // Custom user color
+    gradientMap: null // Will upgrade later with custom gradient
+  })
+  const hairMaterial = new THREE.MeshToonMaterial({
+    color: character.hairColor, // Custom user color
+    gradientMap: null
+  })
+  const clothingMaterial = new THREE.MeshToonMaterial({
+    color: '#6783EC',
+    gradientMap: null
+  })
+  const pantsMaterial = new THREE.MeshToonMaterial({
+    color: '#2C3E50',
+    gradientMap: null
+  })
   const eyeMaterial = new THREE.MeshPhysicalMaterial({
     color: character.eyeColor,
-    metalness: 0.1,
-    roughness: 0.2,
+    metalness: 0.15,
+    roughness: 0.3,
     clearcoat: 1.0,
-    clearcoatRoughness: 0.1,
+    clearcoatRoughness: 0.05
   })
-
+  // Face detail color
+  const mouthColor = expression === 'happy' ? '#d53a3a' : '#85593a'
+  // More realistic head and rig placement: proportions improved!
   return (
-    <group ref={rootRef} position={[0, -1.2, 0]} scale={[1.1, 1.1, 1.1]}>
-      {/* Hip bone - root of lower body */}
-      <group ref={hipsRef} position={[0, 0.8, 0]}>
-        
-        {/* Spine bone - torso */}
-        <group ref={spineRef} position={[0, 0.5, 0]}>
-          
-          {/* Torso mesh - heroic proportions */}
-          <mesh position={[0, 0.3, 0]} castShadow receiveShadow>
-            <cylinderGeometry args={[0.15, 0.18, 0.7, 16]} />
+    <group ref={rootRef} position={[0, -1.55, 0]} scale={[1.2, 1.2, 1.2]}>
+      {/* Hip root */}
+      <group ref={hipsRef} position={[0, 1.1, 0]}>
+        {/* Spine */}
+        <group ref={spineRef} position={[0, 0.58, 0]}>
+          {/* Torso - slightly V shape  */}
+          <mesh position={[0, 0.42, 0]}>
+            <cylinderGeometry args={[0.18, 0.21, 0.95, 18]} />
             <primitive object={clothingMaterial} />
           </mesh>
-          
-          {/* Chest definition */}
-          <mesh position={[0, 0.5, 0.05]} castShadow receiveShadow>
-            <boxGeometry args={[0.25, 0.15, 0.1]} />
+          {/* Chest: better definition */}
+          <mesh position={[0, 0.90, 0.06]}>
+            <boxGeometry args={[0.29, 0.18, 0.11]} />
             <primitive object={clothingMaterial} />
           </mesh>
-          
-          {/* Neck bone */}
-          <group ref={neckRef} position={[0, 0.7, 0]}>
-            
-            {/* Head bone */}
-            <group ref={headRef} position={[0, 0.15, 0]}>
-              
-              {/* Head mesh - anime proportions */}
-              <mesh position={[0, 0.12, 0]} castShadow receiveShadow>
-                <sphereGeometry args={[0.22, 24, 24]} />
+          {/* Neck */}
+          <group ref={neckRef} position={[0, 0.97, 0]}>
+            {/* Head: improved anime shape */}
+            <group ref={headRef} position={[0, 0.165, 0]}>
+              {/* Anime head */}
+              <mesh position={[0, 0.20, 0]}>
+                <sphereGeometry args={[0.23, 28, 30]} />
                 <primitive object={skinMaterial} />
               </mesh>
-              
-              {/* Anime-style eyes */}
-              <mesh position={[-0.06, 0.15, 0.19]} castShadow>
-                <sphereGeometry args={[0.025, 12, 12]} />
+              {/* Face: more detail for anime */}
+              {/* Eyes: large, oval, anime-like with soft shading */}
+              <mesh position={[-0.066, 0.27, 0.198]}>
+                <sphereGeometry args={[0.029, 13, 14]} />
                 <primitive object={eyeMaterial} />
               </mesh>
-              <mesh position={[0.06, 0.15, 0.19]} castShadow>
-                <sphereGeometry args={[0.025, 12, 12]} />
+              <mesh position={[0.066, 0.27, 0.198]}>
+                <sphereGeometry args={[0.029, 13, 14]} />
                 <primitive object={eyeMaterial} />
               </mesh>
-              
-              {/* Eye highlights */}
-              <mesh position={[-0.055, 0.16, 0.21]}>
-                <sphereGeometry args={[0.008, 8, 8]} />
-                <meshBasicMaterial color="white" />
+              {/* Eye highlight */}
+              <mesh position={[-0.059, 0.282, 0.217]}>
+                <sphereGeometry args={[0.009, 5, 5]} />
+                <meshBasicMaterial color="#fff" />
               </mesh>
-              <mesh position={[0.065, 0.16, 0.21]}>
-                <sphereGeometry args={[0.008, 8, 8]} />
-                <meshBasicMaterial color="white" />
+              <mesh position={[0.074, 0.283, 0.218]}>
+                <sphereGeometry args={[0.009, 5, 5]} />
+                <meshBasicMaterial color="#fff" />
               </mesh>
-              
               {/* Eyelids for blinking */}
               {isBlinking && (
                 <>
-                  <mesh position={[-0.06, 0.15, 0.20]} rotation={[0, 0, 0]}>
-                    <boxGeometry args={[0.05, 0.01, 0.02]} />
+                  <mesh position={[-0.066, 0.27, 0.20]}>
+                    <boxGeometry args={[0.05, 0.017, 0.016]} />
                     <primitive object={skinMaterial} />
                   </mesh>
-                  <mesh position={[0.06, 0.15, 0.20]} rotation={[0, 0, 0]}>
-                    <boxGeometry args={[0.05, 0.01, 0.02]} />
+                  <mesh position={[0.066, 0.27, 0.20]}>
+                    <boxGeometry args={[0.05, 0.017, 0.016]} />
                     <primitive object={skinMaterial} />
                   </mesh>
                 </>
               )}
-              
-              {/* Nose */}
-              <mesh position={[0, 0.1, 0.20]} castShadow>
-                <boxGeometry args={[0.008, 0.015, 0.008]} />
+              {/* Nose: slightly more natural */}
+              <mesh position={[0, 0.22, 0.206]}>
+                <cylinderGeometry args={[0.006, 0.008, 0.025, 8]} />
                 <primitive object={skinMaterial} />
               </mesh>
-              
-              {/* Mouth based on expression */}
-              <mesh 
-                position={[0, 0.08, 0.19]} 
-                rotation={expression === 'happy' ? [0, 0, 0.1] : [0, 0, 0]}
-                castShadow
-              >
-                <boxGeometry args={expression === 'happy' ? [0.03, 0.005, 0.005] : [0.02, 0.003, 0.003]} />
-                <meshBasicMaterial color={expression === 'happy' ? '#ff6b6b' : '#8b4513'} />
+              {/* Mouth: more expressive curve */}
+              <mesh position={[0, 0.192, 0.194]} rotation={expression === 'happy' ? [0, 0, 0.09] : expression === "determined" ? [0, 0, -0.07] : [0, 0, 0]}>
+                <boxGeometry args={expression === "happy" ? [0.042, 0.009, 0.01] : expression === "determined" ? [0.036, 0.006, 0.009] : [0.027, 0.005, 0.007]} />
+                <meshBasicMaterial color={mouthColor} />
               </mesh>
-              
-              {/* Hair group */}
-              <group ref={hairRef} position={[0, 0.12, 0]}>
-                {character.hairStyle !== 'bald' && (
+              {/* Cheek blush */}
+              {expression === "happy" && (
+                <>
+                  <mesh position={[-0.1, 0.222, 0.189]}>
+                    <sphereGeometry args={[0.013, 7, 7]} />
+                    <meshBasicMaterial color="#ffbdbd" />
+                  </mesh>
+                  <mesh position={[0.1, 0.222, 0.189]}>
+                    <sphereGeometry args={[0.013, 7, 7]} />
+                    <meshBasicMaterial color="#ffbdbd" />
+                  </mesh>
+                </>
+              )}
+              {/* --- CUSTOM LAYERED HAIR STYLES --- */}
+              <group ref={hairRef} position={[0, 0.20, 0]}>
+                {/* All hair meshes layer together according to chosen style */}
+                {character.hairStyle === "afro" && (
                   <>
-                    {/* Base hair volume */}
-                    <mesh castShadow>
-                      <sphereGeometry args={[0.26, 16, 16]} />
+                    {/* Large sphere with three blobs */}
+                    <mesh position={[0, 0.03, 0]}>
+                      <sphereGeometry args={[0.25, 18, 16]} />
                       <primitive object={hairMaterial} />
                     </mesh>
-                    
-                    {/* Hair style specifics */}
-                    {character.hairStyle === 'ponytail' && (
-                      <mesh position={[0, -0.1, -0.25]} rotation={[0.3, 0, 0]} castShadow>
-                        <cylinderGeometry args={[0.04, 0.02, 0.3, 8]} />
-                        <primitive object={hairMaterial} />
-                      </mesh>
-                    )}
-                    
-                    {character.hairStyle === 'afro' && (
-                      <>
-                        <mesh position={[0.1, 0.05, 0.1]} castShadow>
-                          <sphereGeometry args={[0.08, 12, 12]} />
-                          <primitive object={hairMaterial} />
-                        </mesh>
-                        <mesh position={[-0.1, 0.05, 0.1]} castShadow>
-                          <sphereGeometry args={[0.08, 12, 12]} />
-                          <primitive object={hairMaterial} />
-                        </mesh>
-                        <mesh position={[0, 0.15, -0.05]} castShadow>
-                          <sphereGeometry args={[0.12, 12, 12]} />
-                          <primitive object={hairMaterial} />
-                        </mesh>
-                      </>
-                    )}
+                    <mesh position={[0.12, 0.08, 0]}>
+                      <sphereGeometry args={[0.13, 10, 14]} />
+                      <primitive object={hairMaterial} />
+                    </mesh>
+                    <mesh position={[-0.12, 0.10, 0]}>
+                      <sphereGeometry args={[0.13, 10, 14]} />
+                      <primitive object={hairMaterial} />
+                    </mesh>
                   </>
                 )}
+                {character.hairStyle === "ponytail" && (
+                  <>
+                    {/* Volume on top */}
+                    <mesh position={[0, 0.05, 0]}>
+                      <sphereGeometry args={[0.19, 17, 16]} />
+                      <primitive object={hairMaterial} />
+                    </mesh>
+                    {/* Ponytail strand: cylinder gently arcing back */}
+                    <mesh position={[0, -0.06, -0.26]} rotation={[0.6, 0, 0]}>
+                      <cylinderGeometry args={[0.038, 0.018, 0.38, 10]} />
+                      <primitive object={hairMaterial} />
+                    </mesh>
+                  </>
+                )}
+                {character.hairStyle === "curly" && (
+                  <>
+                    {/* Top */}
+                    <mesh position={[0, 0.08, 0]}>
+                      <sphereGeometry args={[0.19, 14, 14]} />
+                      <primitive object={hairMaterial} />
+                    </mesh>
+                    {/* Side curls */}
+                    <mesh position={[-0.10, 0.05, 0.13]}>
+                      <sphereGeometry args={[0.07, 9, 10]} />
+                      <primitive object={hairMaterial} />
+                    </mesh>
+                    <mesh position={[0.10, 0.05, 0.12]}>
+                      <sphereGeometry args={[0.07, 9, 10]} />
+                      <primitive object={hairMaterial} />
+                    </mesh>
+                  </>
+                )}
+                {character.hairStyle === "long" && (
+                  <>
+                    {/* Soft cap */}
+                    <mesh position={[0, 0.07, 0]}>
+                      <sphereGeometry args={[0.19, 18, 15]} />
+                      <primitive object={hairMaterial} />
+                    </mesh>
+                    {/* Back hair curtain: elongated sphere */}
+                    <mesh position={[0, -0.09, -0.11]} rotation={[0.30, 0, 0]}>
+                      <sphereGeometry args={[0.135, 13, 13]} />
+                      <primitive object={hairMaterial} />
+                    </mesh>
+                  </>
+                )}
+                {/* Short/Default style */}
+                {["short", "buzz-cut"].includes(character.hairStyle) && (
+                  <mesh>
+                    <sphereGeometry args={[0.173, 16, 15]} />
+                    <primitive object={hairMaterial} />
+                  </mesh>
+                )}
+                {/* Mohawk style example */}
+                {character.hairStyle === "mohawk" && (
+                  <>
+                    {/* Side fade */}
+                    <mesh position={[0, 0.05, 0]}>
+                      <sphereGeometry args={[0.148, 12, 10]} />
+                      <primitive object={hairMaterial} />
+                    </mesh>
+                    {/* Mohawk strip */}
+                    <mesh position={[0, 0.12, 0]}>
+                      <cylinderGeometry args={[0.025, 0.025, 0.43, 6]} />
+                      <primitive object={hairMaterial} />
+                    </mesh>
+                  </>
+                )}
+                {/* Bald: render nothing */}
               </group>
             </group>
           </group>
-          
-          {/* Left shoulder bone */}
-          <group ref={leftShoulderRef} position={[-0.22, 0.5, 0]}>
-            
-            {/* Left arm bone */}
-            <group ref={leftArmRef} position={[0, -0.1, 0]} rotation={[0, 0, 0.1]}>
-              
-              {/* Upper arm mesh */}
-              <mesh position={[0, -0.15, 0]} castShadow receiveShadow>
-                <cylinderGeometry args={[0.045, 0.055, 0.3, 12]} />
+          {/* Shoulders (wider) and arms - HEROIC proportions & accurate joint placement */}
+          <group ref={leftShoulderRef} position={[-0.24, 0.93, 0]}>
+            <group ref={leftArmRef} position={[0, -0.13, 0]} rotation={[0, 0, 0.09]}>
+              {/* Upper arm */}
+              <mesh position={[0, -0.19, 0]}>
+                <cylinderGeometry args={[0.047, 0.06, 0.37, 11]} />
                 <primitive object={skinMaterial} />
               </mesh>
-              
-              {/* Left forearm bone */}
-              <group ref={leftForearmRef} position={[0, -0.3, 0]}>
-                
-                {/* Forearm mesh */}
-                <mesh position={[0, -0.12, 0]} castShadow receiveShadow>
-                  <cylinderGeometry args={[0.035, 0.045, 0.24, 12]} />
+              <group ref={leftForearmRef} position={[0, -0.349, 0]}>
+                <mesh position={[0, -0.13, 0]}>
+                  <cylinderGeometry args={[0.035, 0.041, 0.22, 11]} />
                   <primitive object={skinMaterial} />
                 </mesh>
-                
-                {/* Hand */}
-                <mesh position={[0, -0.26, 0]} castShadow>
-                  <sphereGeometry args={[0.045, 12, 12]} />
+                {/* Hand (slimmer, more natural) */}
+                <mesh position={[0, -0.21, 0]}>
+                  <sphereGeometry args={[0.039, 9, 9]} />
                   <primitive object={skinMaterial} />
                 </mesh>
               </group>
             </group>
           </group>
-          
-          {/* Right shoulder bone */}
-          <group ref={rightShoulderRef} position={[0.22, 0.5, 0]}>
-            
-            {/* Right arm bone */}
-            <group ref={rightArmRef} position={[0, -0.1, 0]} rotation={[0, 0, -0.1]}>
-              
-              {/* Upper arm mesh */}
-              <mesh position={[0, -0.15, 0]} castShadow receiveShadow>
-                <cylinderGeometry args={[0.045, 0.055, 0.3, 12]} />
+          <group ref={rightShoulderRef} position={[0.24, 0.93, 0]}>
+            <group ref={rightArmRef} position={[0, -0.13, 0]} rotation={[0, 0, -0.09]}>
+              <mesh position={[0, -0.19, 0]}>
+                <cylinderGeometry args={[0.047, 0.06, 0.37, 11]} />
                 <primitive object={skinMaterial} />
               </mesh>
-              
-              {/* Right forearm bone */}
-              <group ref={rightForearmRef} position={[0, -0.3, 0]}>
-                
-                {/* Forearm mesh */}
-                <mesh position={[0, -0.12, 0]} castShadow receiveShadow>
-                  <cylinderGeometry args={[0.035, 0.045, 0.24, 12]} />
+              <group ref={rightForearmRef} position={[0, -0.349, 0]}>
+                <mesh position={[0, -0.13, 0]}>
+                  <cylinderGeometry args={[0.035, 0.041, 0.22, 11]} />
                   <primitive object={skinMaterial} />
                 </mesh>
-                
-                {/* Hand */}
-                <mesh position={[0, -0.26, 0]} castShadow>
-                  <sphereGeometry args={[0.045, 12, 12]} />
+                <mesh position={[0, -0.21, 0]}>
+                  <sphereGeometry args={[0.039, 9, 9]} />
                   <primitive object={skinMaterial} />
                 </mesh>
               </group>
             </group>
           </group>
         </group>
-        
         {/* Waist */}
-        <mesh position={[0, 0.4, 0]} castShadow receiveShadow>
-          <cylinderGeometry args={[0.13, 0.15, 0.15, 16]} />
+        <mesh position={[0, 0.52, 0]}>
+          <cylinderGeometry args={[0.13, 0.171, 0.14, 15]} />
           <primitive object={pantsMaterial} />
         </mesh>
-        
-        {/* Left thigh bone */}
-        <group ref={leftThighRef} position={[-0.08, 0.2, 0]}>
-          
-          {/* Thigh mesh */}
-          <mesh position={[0, -0.18, 0]} castShadow receiveShadow>
-            <cylinderGeometry args={[0.055, 0.07, 0.36, 12]} />
+        {/* Hips/legs: natural athletic thigh shape, knees in the right place! */}
+        <group ref={leftThighRef} position={[-0.088, 0.29, 0]}>
+          <mesh position={[0, -0.21, 0]}>
+            <cylinderGeometry args={[0.063, 0.07, 0.41, 12]} />
             <primitive object={pantsMaterial} />
           </mesh>
-          
-          {/* Left calf bone */}
-          <group ref={leftCalfRef} position={[0, -0.36, 0]}>
-            
-            {/* Calf mesh */}
-            <mesh position={[0, -0.15, 0]} castShadow receiveShadow>
-              <cylinderGeometry args={[0.04, 0.055, 0.3, 12]} />
+          {/* Knee joint is top of the calf! */}
+          <group ref={leftCalfRef} position={[0, -0.41, 0]}>
+            <mesh position={[0, -0.17, 0]}>
+              <cylinderGeometry args={[0.044, 0.061, 0.29, 11]} />
               <primitive object={skinMaterial} />
             </mesh>
-            
             {/* Foot */}
-            <mesh position={[0, -0.32, 0.08]} castShadow receiveShadow>
-              <boxGeometry args={[0.08, 0.06, 0.2]} />
+            <mesh position={[0, -0.34, 0.11]}>
+              <boxGeometry args={[0.086, 0.062, 0.21]} />
               <meshToonMaterial color="#1a1a1a" />
             </mesh>
           </group>
         </group>
-        
-        {/* Right thigh bone */}
-        <group ref={rightThighRef} position={[0.08, 0.2, 0]}>
-          
-          {/* Thigh mesh */}
-          <mesh position={[0, -0.18, 0]} castShadow receiveShadow>
-            <cylinderGeometry args={[0.055, 0.07, 0.36, 12]} />
+        <group ref={rightThighRef} position={[0.088, 0.29, 0]}>
+          <mesh position={[0, -0.21, 0]}>
+            <cylinderGeometry args={[0.063, 0.07, 0.41, 12]} />
             <primitive object={pantsMaterial} />
           </mesh>
-          
-          {/* Right calf bone */}
-          <group ref={rightCalfRef} position={[0, -0.36, 0]}>
-            
-            {/* Calf mesh */}
-            <mesh position={[0, -0.15, 0]} castShadow receiveShadow>
-              <cylinderGeometry args={[0.04, 0.055, 0.3, 12]} />
+          <group ref={rightCalfRef} position={[0, -0.41, 0]}>
+            <mesh position={[0, -0.17, 0]}>
+              <cylinderGeometry args={[0.044, 0.061, 0.29, 11]} />
               <primitive object={skinMaterial} />
             </mesh>
-            
-            {/* Foot */}
-            <mesh position={[0, -0.32, 0.08]} castShadow receiveShadow>
-              <boxGeometry args={[0.08, 0.06, 0.2]} />
+            <mesh position={[0, -0.34, 0.11]}>
+              <boxGeometry args={[0.086, 0.062, 0.21]} />
               <meshToonMaterial color="#1a1a1a" />
             </mesh>
           </group>
