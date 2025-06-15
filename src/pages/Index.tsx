@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
@@ -7,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Edit, Settings, Target, Trophy, Users } from "lucide-react"
 import { useUserProfile } from "@/hooks/useUserProfile"
-import { AdvancedAvatar } from "@/components/character/AdvancedAvatar"
+import { Avatar3DController } from "@/components/character/Avatar3DController"
 
 const Index = () => {
   const navigate = useNavigate()
@@ -33,7 +34,7 @@ const Index = () => {
   return (
     <>
       <main className="flex-1 p-6 cyber-grid matrix-bg">
-        {/* Hero Section with Enhanced Avatar */}
+        {/* Hero Section with Enhanced 3D Avatar */}
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[70vh]">
             {/* Left Column - Hero Content */}
@@ -83,14 +84,15 @@ const Index = () => {
               </div>
             </div>
 
-            {/* Right Column - Enhanced Avatar Display */}
+            {/* Right Column - Enhanced 3D Avatar Display */}
             <div className="flex flex-col items-center space-y-6">
               <div className="text-center space-y-4">
                 <h2 className="text-2xl font-bold text-cyber-blue">Agent {profile.username}</h2>
-                <AdvancedAvatar 
+                <Avatar3DController 
                   character={profile.character} 
                   size="xl"
-                  animation="heroic"
+                  showControls={true}
+                  allowRotation={true}
                   className="hover:scale-105 transition-transform duration-300"
                 />
                 <div className="flex gap-3">

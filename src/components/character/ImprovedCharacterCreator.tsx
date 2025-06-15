@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { AdvancedAvatar } from "./AdvancedAvatar"
+import { Avatar3DController } from "./Avatar3DController"
 import { CharacterCustomization } from "@/hooks/useUserProfile"
 import { Palette, Edit3, Sparkles, User } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -23,63 +23,37 @@ interface ImprovedCharacterCreatorProps {
 
 // Enhanced skin tone palette
 const skinColors = [
-  "#FDBCB4", // Light pink
-  "#F1C27D", // Light beige
-  "#E0AC69", // Medium tan
-  "#C68642", // Medium brown
-  "#8D5524", // Dark brown
-  "#6B4423", // Deep brown
-  "#4A2C17", // Very deep
-  "#F4E4D6", // Pale
-  "#E8B4A0", // Warm light
-  "#CD9777"  // Warm medium
+  "#FDBCB4", "#F1C27D", "#E0AC69", "#C68642", "#8D5524", 
+  "#6B4423", "#4A2C17", "#F4E4D6", "#E8B4A0", "#CD9777"
 ]
 
 // Comprehensive hairstyle options
 const hairStyles = [
-  { id: "short", name: "Short", description: "Classic short cut" },
-  { id: "afro", name: "Afro", description: "Natural afro texture" },
-  { id: "buzz-cut", name: "Buzz Cut", description: "Military style" },
-  { id: "long", name: "Long", description: "Flowing long hair" },
-  { id: "curly", name: "Curly", description: "Natural curls" },
-  { id: "spiky", name: "Spiky", description: "Edgy spikes" },
-  { id: "ponytail", name: "Ponytail", description: "High ponytail" },
-  { id: "braided", name: "Braided", description: "Elegant braids" },
-  { id: "bob", name: "Bob", description: "Classic bob cut" },
-  { id: "mohawk", name: "Mohawk", description: "Punk mohawk" },
-  { id: "wavy", name: "Wavy", description: "Gentle waves" },
-  { id: "dreads", name: "Dreads", description: "Dreadlocks" },
-  { id: "bald", name: "Bald", description: "No hair" }
+  { id: "short", name: "Short" },
+  { id: "afro", name: "Afro" },
+  { id: "buzz-cut", name: "Buzz Cut" },
+  { id: "long", name: "Long" },
+  { id: "curly", name: "Curly" },
+  { id: "spiky", name: "Spiky" },
+  { id: "ponytail", name: "Ponytail" },
+  { id: "braided", name: "Braided" },
+  { id: "bob", name: "Bob" },
+  { id: "mohawk", name: "Mohawk" },
+  { id: "wavy", name: "Wavy" },
+  { id: "dreads", name: "Dreads" },
+  { id: "bald", name: "Bald" }
 ]
 
 // Expanded hair color palette
 const hairColors = [
-  "#2C1B18", // Black
-  "#8B4513", // Brown
-  "#D2691E", // Auburn
-  "#DEB887", // Blonde
-  "#B22222", // Red
-  "#696969", // Gray
-  "#FFFFFF", // White
-  "#F4A460", // Sandy brown
-  "#CD853F", // Peru
-  "#800080", // Purple
-  "#FF1493", // Hot pink
-  "#00CED1"  // Cyber blue
+  "#2C1B18", "#8B4513", "#D2691E", "#DEB887", "#B22222", "#696969", 
+  "#FFFFFF", "#F4A460", "#CD853F", "#800080", "#FF1493", "#00CED1"
 ]
 
 // Natural eye colors
 const eyeColors = [
-  "#8B4513", // Brown
-  "#4682B4", // Blue
-  "#228B22", // Green
-  "#2F4F4F", // Gray
-  "#800080", // Violet
-  "#000000", // Black
-  "#DAA520", // Hazel
-  "#008B8B", // Teal
-  "#1E90FF", // Dodger blue
-  "#32CD32"  // Lime green
+  "#8B4513", "#4682B4", "#228B22", "#2F4F4F", "#800080", 
+  "#000000", "#DAA520", "#008B8B", "#1E90FF", "#32CD32"
 ]
 
 export function ImprovedCharacterCreator({ 
@@ -147,31 +121,29 @@ export function ImprovedCharacterCreator({
             {editMode ? (
               <>
                 <Edit3 className="h-6 w-6 text-cyber-blue" />
-                <span>Customize Your Avatar</span>
+                <span>Customize Your 3D Avatar</span>
               </>
             ) : (
               <>
                 <Sparkles className="h-6 w-6 text-cyber-blue" />
-                <span>Create Your Cyber Agent</span>
+                <span>Create Your 3D Cyber Agent</span>
               </>
             )}
           </DialogTitle>
         </DialogHeader>
 
         <div className="grid lg:grid-cols-5 gap-8">
-          {/* Enhanced Character Preview */}
+          {/* Enhanced 3D Character Preview */}
           <div className="lg:col-span-2 flex flex-col items-center space-y-6">
             <div className="relative">
-              <AdvancedAvatar 
+              <Avatar3DController 
                 character={character} 
                 size="xl" 
-                animation={previewAnimation}
-                showAnimationControls={true}
-                onAnimationChange={setPreviewAnimation}
-                showFullBody={true}
+                showControls={true}
+                allowRotation={true}
               />
               <Badge className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 bg-cyber-blue/10 border-cyber-blue text-cyber-blue">
-                {editMode ? "Preview Changes" : "Your Agent"}
+                {editMode ? "3D Preview" : "Your Agent"}
               </Badge>
             </div>
             
@@ -220,7 +192,6 @@ export function ImprovedCharacterCreator({
                           "h-auto py-3 px-2 flex flex-col items-center space-y-1 text-xs",
                           character.hairStyle === style.id && "bg-cyber-blue border-cyber-blue text-white"
                         )}
-                        title={style.description}
                       >
                         <span className="font-medium">{style.name}</span>
                       </Button>
@@ -251,7 +222,7 @@ export function ImprovedCharacterCreator({
                 className="flex-1 bg-cyber-blue hover:bg-cyber-blue/80 text-white"
                 size="lg"
               >
-                {editMode ? "Save Changes" : "Enter CyberCop Academy"}
+                {editMode ? "Save 3D Character" : "Enter CyberCop Academy"}
               </Button>
               
               {editMode && onCancel && (
