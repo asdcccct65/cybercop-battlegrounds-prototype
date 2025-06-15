@@ -1,9 +1,27 @@
 
 import React, { useRef, useEffect, useState } from 'react'
-import { Canvas, useFrame, useLoader } from '@react-three/fiber'
+import { Canvas, useFrame, extend, ThreeElements } from '@react-three/fiber'
 import { OrbitControls, PerspectiveCamera, Environment, ContactShadows } from '@react-three/drei'
 import * as THREE from 'three'
 import { CharacterCustomization } from '@/hooks/useUserProfile'
+
+// Extend Three.js elements for JSX
+extend(THREE)
+
+// Declare module to include Three.js elements in JSX
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      group: ThreeElements['group']
+      mesh: ThreeElements['mesh']
+      sphereGeometry: ThreeElements['sphereGeometry']
+      cylinderGeometry: ThreeElements['cylinderGeometry']
+      boxGeometry: ThreeElements['boxGeometry']
+      meshPhysicalMaterial: ThreeElements['meshPhysicalMaterial']
+      primitive: ThreeElements['primitive']
+    }
+  }
+}
 
 interface Avatar3DProps {
   character: CharacterCustomization
